@@ -4,6 +4,7 @@ import { Metadata } from "next"
 import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
+import { Wallet } from "@/context/connectWalletContext"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/utils/fonts"
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           fontSans.variable
         )}
       >
+        <Wallet>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <div className="container flex-1 ">
@@ -57,6 +59,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           </div>
           <TailwindIndicator />
         </ThemeProvider>
+        </Wallet>
       </div>
     </>
   )
