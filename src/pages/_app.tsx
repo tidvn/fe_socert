@@ -1,14 +1,15 @@
 import "@/styles/globals.css"
 
 import { Metadata } from "next"
-import { AppProps } from "next/app"
+import type { ReactElement, ReactNode } from 'react'
+import type { NextPage } from 'next'
+import type { AppProps } from 'next/app'
 
 import { siteConfig } from "@/config/site"
-import { fontSans } from "@/lib/fonts"
-import { cn } from "@/lib/utils"
-import { SiteHeader } from "@/components/site-header"
+import { fontSans } from "@/utils/fonts"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from "@/utils/cn"
 
 export const metadata: Metadata = {
   title: {
@@ -26,12 +27,18 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
 }
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
 
-export default function App({ Component, pageProps }: AppProps) {
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page)
   return (
     <>
-      {/* <html lang="en" suppressHydrationWarning> */}
-      {/* <head /> */}
       <div
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -40,15 +47,17 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
-            <SiteHeader />
             <div className="container flex-1 ">
-              <Component  {...pageProps} />
+              {getLayout(
+                <>
+                  <Component  {...pageProps} />
+                </>
+              )}
             </div>
           </div>
           <TailwindIndicator />
         </ThemeProvider>
       </div>
-      {/* </html> */}
     </>
   )
 }
