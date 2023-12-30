@@ -1,9 +1,10 @@
 import Link from "next/link"
-
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
+import { ReactElement } from "react"
+import DashboardLayout from "@/components/layout/dashboard"
 
-export default function IndexPage() {
+const IndexPage = () => {
   return (
     <section className="grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
@@ -37,3 +38,14 @@ export default function IndexPage() {
     </section>
   )
 }
+
+
+IndexPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  )
+}
+
+export default IndexPage
