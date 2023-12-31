@@ -40,7 +40,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 signature: bs58.encode(signature),
                 publicAddress: publicKey.toBase58(),
             }
-            console.log(data)
             await signIn("credentials", { ...data, callbackUrl: '/dashboard' })
 
         } catch (error) {

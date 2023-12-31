@@ -17,6 +17,10 @@ import {
 } from "@/components/ui/tabs"
 // import { CalendarDateRangePicker } from "@/components/date-range-picker"
 import { MainNav } from "@/components/main-nav"
+import { useSession } from "next-auth/react"
+import { userStore } from "@/store/user"
+import { ReactElement } from "react"
+import DashboardLayout from "@/components/layout/dashboard"
 // import { Overview } from "@/components/overview"
 // import { RecentSales } from "@/components/recent-sales"
 // import { Search } from "@/components/search"
@@ -28,7 +32,12 @@ export const metadata: Metadata = {
   description: "Example dashboard app built using the components.",
 }
 
-export default function DashboardPage() {
+const DashboardPage = () => {
+
+  const { userInfo } = userStore();
+
+  console.log(userInfo)
+
   return (
     <>
       <div className="md:hidden">
@@ -211,3 +220,11 @@ export default function DashboardPage() {
     </>
   )
 }
+
+DashboardPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>{page}</DashboardLayout>
+  )
+}
+
+export default DashboardPage

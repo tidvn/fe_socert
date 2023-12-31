@@ -38,6 +38,7 @@
     "class-variance-authority": "latest",
     "clsx": "latest",
     "cmdk": "^0.2.0",
+    "immer": "^10.0.3",
     "lodash": "^4.17.21",
     "lucide-react": "latest",
     "next": "latest",
@@ -49,7 +50,8 @@
     "sharp": "latest",
     "tailwind-merge": "latest",
     "tailwindcss-animate": "latest",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "latest",

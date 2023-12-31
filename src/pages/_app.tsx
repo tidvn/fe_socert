@@ -11,6 +11,7 @@ import { fontSans } from "@/utils/fonts"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/utils/cn"
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: {
@@ -37,6 +38,8 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const { session, ...props }: any = pageProps
+
   const getLayout = Component.getLayout ?? ((page) => page)
   return (
     <>
@@ -47,18 +50,21 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         )}
       >
         <Wallet>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="relative flex min-h-screen flex-col">
-            <div className="container flex-1 ">
-              {getLayout(
-                <>
-                  <Component  {...pageProps} />
-                </>
-              )}
+
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <div className="relative flex min-h-screen flex-col">
+              <div className="container flex-1 ">
+                <SessionProvider session={session}>
+                  {getLayout(
+                    <>
+                      <Component  {...props} />
+                    </>
+                  )}
+                </SessionProvider>
+              </div>
             </div>
-          </div>
-          <TailwindIndicator />
-        </ThemeProvider>
+            <TailwindIndicator />
+          </ThemeProvider>
         </Wallet>
       </div>
     </>

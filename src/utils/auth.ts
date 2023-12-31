@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import fetchClient from "./fetch-client";
 import { jwt } from "./jwt";
 
-export const authOptions: NextAuthOptions = {  
+export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
@@ -25,32 +25,28 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        // console.log(credentials)
         try {
           const response = await fetchClient({
             method: "POST",
             endpoint: "/auth/solana/login",
             body: JSON.stringify(credentials),
           });
-          console.log(response)
-
-          if (response.status != 200) {
-            throw new Error("Cant not get data");
-          }
-          const data: {
-            user: any;
-            access_token: string;
-          } =  response.data;
-          if (!data?.access_token) {
-            throw response;
+          if (response.status != 201) {
+            throw new Error("Cant not login");
           }
 
+
+          const { data } = response.data;
+          if (!data.accessToken) {
+            throw data.message;
+          }
+          const { iat, exp, ...user } = jwt.decode(data.accessToken);
           return {
-            ...data.user,
-            accessToken: data?.access_token,
+            ...user,
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
           };
         } catch (error) {
-          console.log(error)
           if (error instanceof Response) {
             return null;
           }
@@ -61,13 +57,12 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }: any) {
-      if (trigger === "update") {       
+      if (trigger === "update") {
         if (session.type === "MANUAL") {
           const response = await fetchClient({
-            endpoint: "/api/user",
-            token: token.accessToken,
+            endpoint: `/user/profile/${session.user.sub}`,
           });
-          const user =  response.data;
+          const { data: user } = response.data;
 
           return { ...token, ...user };
         }
@@ -94,11 +89,12 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }: any) {
+
       if (token.error) {
-        throw new Error("Refresh token has expired");
+        throw new Error(token.error);
       }
       session.accessToken = token.accessToken;
-      session.user.username = token.username || "";
+      session.user.id = token.sub;
       session.user.email = token.email || "";
       return session;
     },
@@ -107,7 +103,7 @@ export const authOptions: NextAuthOptions = {
     async signOut({ token }: any) {
       await fetchClient({
         method: "POST",
-        endpoint: "/api/logout",
+        endpoint: "/auth/logout",
         token: token.accessToken,
       });
     },
@@ -119,7 +115,7 @@ async function refreshAccessToken(token: any) {
     const response = await fetchClient({
       method: "POST",
       endpoint: "/api/refresh",
-      token: token?.accessToken,
+      token: token?.refreshToken,
     });
 
     if (response.status != 200) {
