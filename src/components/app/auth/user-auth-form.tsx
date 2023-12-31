@@ -26,7 +26,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             const publicKey = wallet.publicKey;
             const { data: responseData } = await fetchClient({
                 method: "GET",
-                endpoint: `/auth/wallet/${publicKey}/nonce/`,
+                endpoint: `/auth/wallet/${publicKey}/nonce`,
             });
             if (responseData.statusCode !== 200) {
                 return;

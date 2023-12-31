@@ -79,12 +79,12 @@ export const authOptions: NextAuthOptions = {
         return token;
       }
 
-      const currentUnixTimestamp = Math.floor(Date.now() / 1000);
-      const accessTokenHasExpired = currentUnixTimestamp > accessTokenExpires;
+      // const currentUnixTimestamp = Math.floor(Date.now() / 1000);
+      // const accessTokenHasExpired = currentUnixTimestamp > accessTokenExpires;
 
-      if (accessTokenHasExpired) {
-        return await refreshAccessToken(token);
-      }
+      // if (accessTokenHasExpired) {
+      //   return await refreshAccessToken(token);
+      // }
 
       return token;
     },
@@ -110,31 +110,31 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-async function refreshAccessToken(token: any) {
-  try {
-    const response = await fetchClient({
-      method: "POST",
-      endpoint: "/api/refresh",
-      token: token?.refreshToken,
-    });
+// async function refreshAccessToken(token: any) {
+//   try {
+//     const response = await fetchClient({
+//       method: "POST",
+//       endpoint: "/api/refresh",
+//       token: token?.refreshToken,
+//     });
 
-    if (response.status != 200) {
-      throw new Error("Cant not get data");
-    }
+//     if (response.status != 200) {
+//       throw new Error("Cant not get data");
+//     }
 
-    const refreshedAccessToken: { access_token: string } =
-      await response.data;
-    const { exp } = jwt.decode(refreshedAccessToken.access_token);
+//     const refreshedAccessToken: { access_token: string } =
+//       await response.data;
+//     const { exp } = jwt.decode(refreshedAccessToken.access_token);
 
-    return {
-      ...token,
-      accessToken: refreshedAccessToken.access_token,
-      exp,
-    };
-  } catch (error) {
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
-  }
-}
+//     return {
+//       ...token,
+//       accessToken: refreshedAccessToken.access_token,
+//       exp,
+//     };
+//   } catch (error) {
+//     return {
+//       ...token,
+//       error: "RefreshAccessTokenError",
+//     };
+//   }
+// }
