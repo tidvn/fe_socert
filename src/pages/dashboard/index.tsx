@@ -33,10 +33,10 @@ export const metadata: Metadata = {
 }
 
 const DashboardPage = () => {
-  const { userInfo } = userStore();
-  console.log("user",userInfo);
-  const { data: session, status }: any = useSession();
-  console.log("session",session);
+  // const { userInfo } = userStore();
+  // console.log("user",userInfo);
+  // const { data: session, status }: any = useSession();
+  // console.log("session",session);
 
 
 

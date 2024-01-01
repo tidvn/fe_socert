@@ -4,14 +4,14 @@ import { getSession, signOut } from 'next-auth/react';
 interface fetchClientProps {
   method?: string;
   endpoint: string;
-  body?: string;
+  body?: any;
   token?: string;
 }
 
-async function fetchClient({ method = 'GET', endpoint, body, token=""}: fetchClientProps) {
+async function fetchClient({ method = 'GET', endpoint, body, token = "" }: fetchClientProps) {
   try {
     const session: any = await getSession();
-    const accessToken = token || session?.accessToken;
+    const accessToken = token || session?.user?.accessToken;
     const axiosConfig = {
       method: method,
       url: NEXT_PUBLIC_BACKEND_URL + endpoint.toString(),
@@ -36,10 +36,6 @@ async function fetchClient({ method = 'GET', endpoint, body, token=""}: fetchCli
 
       if (errorResponse.status === 401) {
         signOut();
-      }
-
-      if (errorResponse.status === 409) {
-        window.location.href = '/request-email-verification';
       }
 
       throw errorResponse;
