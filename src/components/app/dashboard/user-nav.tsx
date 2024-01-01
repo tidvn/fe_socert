@@ -1,3 +1,4 @@
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Avatar,
   AvatarFallback,
@@ -14,28 +15,32 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { userStore } from "@/store/user";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 export function UserNav() {
-  const {userInfo} = userStore();
-  console.log(userInfo);
+  const { data: session, status } = useSession();
+  const { userInfo }:any = session
+  const { setTheme, theme } = useTheme()
+  if (status != "authenticated") {
+    return;
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarFallback>{userInfo.walletAddress}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm font-medium leading-none">{`${userInfo.firstName} ${userInfo.lastName} `}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              m@example.com
+              {userInfo.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -45,18 +50,20 @@ export function UserNav() {
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             Billing
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem>
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+            Toggle theme
           </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={()=>signOut()}>
+        <DropdownMenuItem onClick={() => signOut()}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
