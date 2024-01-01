@@ -22,8 +22,10 @@ import { RecentSales } from "@/components/app/dashboard/recent-sales"
 import { Search } from "@/components/app/dashboard/search"
 import TeamSwitcher from "@/components/app/dashboard/team-switcher"
 import { UserNav } from "@/components/app/dashboard/user-nav"
-import { ReactElement } from "react"
+import { ReactElement, use } from "react"
 import DashboardLayout from "@/components/layout/dashboard/dashboard"
+import { userStore } from "@/store/user"
+import { useSession } from "next-auth/react"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -31,24 +33,15 @@ export const metadata: Metadata = {
 }
 
 const DashboardPage = () => {
+  const { userInfo } = userStore();
+  console.log("user",userInfo);
+  const { data: session, status }: any = useSession();
+  console.log("session",session);
+
+
+
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
       <div className="hidden flex-col md:flex">
 
         <div className="flex-1 space-y-4 p-8 pt-6">

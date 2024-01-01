@@ -2,10 +2,11 @@ import type { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import fetchClient from "./fetch-client";
 import { jwt } from "./jwt";
+import { isNil } from "lodash";
 
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
   session: {
     strategy: "jwt",
@@ -32,19 +33,18 @@ export const authOptions: NextAuthOptions = {
             body: JSON.stringify(credentials),
           });
           if (response.status != 201) {
-            throw new Error("Cant not login");
+            throw response.data.message;
           }
 
 
           const { data } = response.data;
           if (!data.accessToken) {
-            throw data.message;
+            throw response.data.message;
           }
           const { iat, exp, ...user } = jwt.decode(data.accessToken);
           return {
             ...user,
             accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
           };
         } catch (error) {
           if (error instanceof Response) {
@@ -56,58 +56,41 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }: any) {
-      if (trigger === "update") {
-        if (session.type === "MANUAL") {
-          const response = await fetchClient({
-            endpoint: `/user/profile/${session.user.sub}`,
-          });
-          const { data: user } = response.data;
-
-          return { ...token, ...user };
-        }
-
-        return { ...token, ...session };
-      }
+    async jwt({ token, user }: any) {
       if (user) {
-        return { ...token, ...user };
+        token.user = user;
       }
-
-      const { exp: accessTokenExpires } = jwt.decode(token.accessToken);
-
-      if (!accessTokenExpires) {
-        return token;
-      }
-
-      // const currentUnixTimestamp = Math.floor(Date.now() / 1000);
-      // const accessTokenHasExpired = currentUnixTimestamp > accessTokenExpires;
-
-      // if (accessTokenHasExpired) {
-      //   return await refreshAccessToken(token);
-      // }
-
-      return token;
+      return token
     },
     async session({ session, token }: any) {
 
       if (token.error) {
         throw new Error(token.error);
       }
-      session.accessToken = token.accessToken;
-      session.user.id = token.sub;
-      session.user.email = token.email || "";
+      if (token.user) {
+        const response = await fetchClient({
+          method: "GET",
+          endpoint: `/user/profile/`,
+          token: token.user.accessToken,
+        });
+        if (response.status == 200) {
+          session.userInfo = response.data.data;
+        }
+      }
+
+      session.user = token.user;
       return session;
     },
   },
-  events: {
-    async signOut({ token }: any) {
-      await fetchClient({
-        method: "POST",
-        endpoint: "/auth/logout",
-        token: token.accessToken,
-      });
-    },
-  },
+  // events: {
+  //   async signOut({ token }: any) {
+  //     await fetchClient({
+  //       method: "POST",
+  //       endpoint: "/auth/logout",
+  //       token: token.accessToken,
+  //     });
+  //   },
+  // },
 };
 
 // async function refreshAccessToken(token: any) {
