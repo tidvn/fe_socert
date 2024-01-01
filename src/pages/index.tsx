@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/utils/cn"
 
 export default function IndexPage() {
-  
+
   return (
     <>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
@@ -25,7 +25,7 @@ export default function IndexPage() {
             everything. Follow along as we figure this out together.
           </p>
           <div className="space-x-4">
-            <Link href="/login" className={cn(buttonVariants({ size: "lg" }))}>
+            <Link href="/auth/login" className={cn(buttonVariants({ size: "lg" }))}>
               Get Started
             </Link>
             <Link
