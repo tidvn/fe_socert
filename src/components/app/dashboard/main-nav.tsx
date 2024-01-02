@@ -18,16 +18,16 @@ export function MainNav({
         Overview
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/dashboard/certificate"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        View List Cert
+        Certificate
       </Link>
       <Link
-        href="/dashboard/create-cert"
+        href="/dashboard/student"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Create Cert
+        Student
       </Link>
       {/* <Link
         href="/examples/dashboard"
