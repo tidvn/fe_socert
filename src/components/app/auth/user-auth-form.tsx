@@ -20,6 +20,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     async function handleLogin() {
         try {
+
             if (!wallet.connected) {
                 return;
             }
