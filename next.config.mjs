@@ -10,6 +10,7 @@ const nextConfig = {
         pathname: '**',
       },
     ],
+    domains: ['localhost'],
 }
 }
 export default nextConfig

@@ -43,7 +43,8 @@ export default function OrganizationSwitcher({ className }: OrganizationSwitcher
   const organizations = sessions.userInfo.organizations
 
   const [open, setOpen] = React.useState(false)
-  const [selectedOrganization, setSelectedOrganization] = React.useState<any>(sessions.userInfo.organizations[sessions.userInfo.currentOrg - 1])
+  const { currentOrg, organizations: orgs } = sessions.userInfo
+  const [selectedOrganization, setSelectedOrganization] = React.useState<any>(orgs.find((org: any) => org.id === currentOrg))
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -79,8 +80,9 @@ export default function OrganizationSwitcher({ className }: OrganizationSwitcher
                   key={organization.name}
                   onSelect={async () => {
                     setSelectedOrganization(organization)
-                    await switchOrganization(organization.id)
                     setOpen(false)
+                    await switchOrganization(organization.id)
+
                   }}
                   className="text-sm"
                 >

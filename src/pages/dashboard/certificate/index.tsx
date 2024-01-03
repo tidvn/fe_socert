@@ -1,3 +1,4 @@
+'use client'
 import { Metadata } from "next"
 import Image from "next/image"
 import { PlusCircledIcon } from "@radix-ui/react-icons"
@@ -11,7 +12,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-
+import useSWR from 'swr'
 import { CertificateTemplate } from "@/components/app/certificate/album-artwork"
 import { Menu } from "@/components/app/certificate/menu"
 import { PodcastEmptyPlaceholder } from "@/components/app/certificate/podcast-empty-placeholder"
@@ -22,13 +23,20 @@ import { ReactElement } from "react"
 import DashboardLayout from "@/components/layout/dashboard/dashboard"
 import Link from "next/link"
 import CertificatePageLayout from "@/components/app/certificate/layout/Layout"
+import fetchClient from "@/utils/fetch-client"
+import { isNil } from "lodash"
 
-export const metadata: Metadata = {
-    title: "Music App",
-    description: "Example music app using the components.",
-}
+
+
+
 
 const CertificatePage = () => {
+    const { data, error, isLoading } = useSWR({
+        method: "GET",
+        endpoint: "/certificate/template"
+    }, fetchClient);
+    const listTemplate: any = data?.data.data
+    console.log(listTemplate)
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -68,7 +76,7 @@ const CertificatePage = () => {
                         <div className="relative">
                             <ScrollArea>
                                 <div className="flex space-x-4 pb-4">
-                                    {listenNowAlbums.map((album) => (
+                                    {/* {listenNowAlbums.map((album) => (
                                         <CertificateTemplate
                                             key={album.name}
                                             album={album}
@@ -77,7 +85,7 @@ const CertificatePage = () => {
                                             width={250}
                                             height={330}
                                         />
-                                    ))}
+                                    ))} */}
                                 </div>
                                 <ScrollBar orientation="horizontal" />
                             </ScrollArea>
@@ -94,10 +102,12 @@ const CertificatePage = () => {
                         <div className="relative">
                             <ScrollArea>
                                 <div className="flex space-x-4 pb-4">
-                                    {madeForYouAlbums.map((album) => (
+
+
+                                    {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
                                         <CertificateTemplate
-                                            key={album.name}
-                                            album={album}
+                                            key={item.name}
+                                            data={item}
                                             className="w-[150px]"
                                             aspectRatio="square"
                                             width={150}
@@ -143,3 +153,5 @@ CertificatePage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default CertificatePage
+
+
