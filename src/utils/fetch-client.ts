@@ -1,7 +1,7 @@
 import { NEXT_PUBLIC_BACKEND_URL } from '@/config/env';
 import axios from 'axios';
 import { getSession, signOut } from 'next-auth/react';
-interface fetchClientProps {
+export interface fetchClientProps {
   method?: string;
   endpoint: string;
   body?: any;

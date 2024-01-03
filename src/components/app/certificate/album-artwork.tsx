@@ -3,92 +3,95 @@ import { PlusCircledIcon } from "@radix-ui/react-icons"
 
 import { cn } from "@/utils/cn"
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import React from "react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
 
-import { Album } from "./data/albums"
-import { playlists } from "./data/playlists"
 
 interface CertificateTemplateProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Album
+  data: any
   aspectRatio?: "portrait" | "square"
   width?: number
   height?: number
 }
 
 export function CertificateTemplate({
-  album,
+  data,
   aspectRatio = "portrait",
   width,
   height,
   className,
   ...props
 }: CertificateTemplateProps) {
+
+  const [open, setOpen] = React.useState(false)
   return (
     <div className={cn("space-y-3", className)} {...props}>
-      <ContextMenu>
-        <ContextMenuTrigger>
-          <div className="overflow-hidden rounded-md">
-            <Image
-              src={album.cover}
-              alt={album.name}
-              width={width}
-              height={height}
-              className={cn(
-                "h-auto w-auto object-cover transition-all hover:scale-105",
-                aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-              )}
-            />
-          </div>
-        </ContextMenuTrigger>
-        <ContextMenuContent className="w-40">
-          <ContextMenuItem>Add to Library</ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
-              <ContextMenuItem>
-                <PlusCircledIcon className="mr-2 h-4 w-4" />
-                New Playlist
-              </ContextMenuItem>
-              <ContextMenuSeparator />
-              {playlists.map((playlist) => (
-                <ContextMenuItem key={playlist}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="mr-2 h-4 w-4"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M21 15V6M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 12H3M16 6H3M12 18H3" />
-                  </svg>
-                  {playlist}
-                </ContextMenuItem>
-              ))}
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-          <ContextMenuSeparator />
-          <ContextMenuItem>Play Next</ContextMenuItem>
-          <ContextMenuItem>Play Later</ContextMenuItem>
-          <ContextMenuItem>Create Station</ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem>Like</ContextMenuItem>
-          <ContextMenuItem>Share</ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+
+      <AlertDialog open={open}>
+        <AlertDialogContent>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>{data?.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-7 gap-x-8 items-center">
+                  <div className="col-span-5">
+                    <div className="rounded-md border-2 border-dashed	border-gray-600">
+                      <Image
+                        src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
+                        alt="collection"
+                        width="0"
+                        height="0"
+                        sizes="100vw"
+                        className={cn(
+                          `h-auto w-full object-cover transition-all `
+                        )}
+                      /></div>
+                  </div>
+                  <div className="col-span-2">col2</div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-6">
+              <Button variant="outline">Cancel</Button>
+              <Button onClick={() => setOpen(false)} >Deploy</Button>
+            </CardFooter>
+          </Card>
+        </AlertDialogContent>
+      </AlertDialog>
+
+
+      <div className="overflow-hidden rounded-md" onClick={() => setOpen(true)}>
+        <Image
+          src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
+          alt={data?.id || "error"}
+          width={width}
+          height={height}
+          className={cn(
+            "h-auto w-auto object-cover transition-all hover:scale-105",
+            aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
+          )}
+        />
+      </div>
+
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{album.name}</h3>
-        <p className="text-xs text-muted-foreground">{album.artist}</p>
+        <h3 className="font-medium leading-none">{data?.name}</h3>
+        <p className="text-xs text-muted-foreground">mô tả</p>
       </div>
     </div>
   )
