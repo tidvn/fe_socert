@@ -39,13 +39,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             if (isNil(responseData.data.nonce)) {
                 return;
             }
-            const signature = await wallet.signMessage(new TextEncoder().encode(responseData.data.nonce));
-
-            const data = {
-                signature: bs58.encode(signature),
-                publicAddress: publicKey.toBase58(),
+            if (wallet && wallet.signMessage) {
+                const signature = await wallet.signMessage(new TextEncoder().encode(responseData.data.nonce));
+                const data = {
+                    publicAddress: publicKey?.toBase58(),
+                    signature: bs58.encode(signature),
+                }
+                await signIn("credentials", { ...data, callbackUrl: '/dashboard' })
             }
-            await signIn("credentials", { ...data, callbackUrl: '/dashboard' })
 
         } catch (error) {
             console.log(error)
