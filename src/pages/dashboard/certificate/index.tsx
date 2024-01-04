@@ -44,7 +44,7 @@ const CertificatePage = () => {
                 <div className="space-between flex items-center">
 
                     <div className="ml-auto mr-4">
-                        <Link href="/dashboard/certificate/create-new/template">
+                        <Link href="/dashboard/certificate/create-new">
                             <Button>
                                 <PlusCircledIcon className="mr-2 h-4 w-4" />
                                 Create New
@@ -62,7 +62,7 @@ const CertificatePage = () => {
                 </div>
                 <Separator className="my-4" />
                 <div className="relative">
-                    <ScrollArea>
+                    {/* <ScrollArea> */}
                         <div className="flex space-x-4 pb-4">
                             {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
                                 <CertificateCard
@@ -75,8 +75,8 @@ const CertificatePage = () => {
                                 />
                             ))}
                         </div>
-                        <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
+                        {/* <ScrollBar orientation="horizontal" /> */}
+                    {/* </ScrollArea> */}
                 </div>
 
             </div>

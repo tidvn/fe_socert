@@ -16,6 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
+import { cn } from "@/utils/cn";
 
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
@@ -34,6 +36,9 @@ import { ImagePicker } from "@/components/app/certificate/ImagePicker"
 // import { nftStorageUploader } from '@metaplex-foundation/umi-uploader-nft-storage'
 import { siteConfig } from "@/config/site"
 import * as base58 from "bs58"
+import { MediaPicker } from "degen"
+import { Label } from "recharts"
+import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
 
 const nftFormSchema = z.object({
   name: z
@@ -62,19 +67,20 @@ const nftFormSchema = z.object({
 
 type NftFormValues = z.infer<typeof nftFormSchema>
 
-export function CreateCertificateForm() {
-//   const wallet = useWallet();
-//   const umi = createUmi("https://api.devnet.solana.com")
-//     .use(walletAdapterIdentity(wallet))
-//     .use(mplTokenMetadata())
-//   umi.use(nftStorageUploader({ token: siteConfig.nftstorage_api_key }))
+export function CreateCertificateForm(props:any) {
+  const { certId } = props
+  //   const wallet = useWallet();
+  //   const umi = createUmi("https://api.devnet.solana.com")
+  //     .use(walletAdapterIdentity(wallet))
+  //     .use(mplTokenMetadata())
+  //   umi.use(nftStorageUploader({ token: siteConfig.nftstorage_api_key }))
 
-//   const mint = generateSigner(umi);
-//   // const bundlrUploader = createBundlrUploader(umi);
+  //   const mint = generateSigner(umi);
+  //   // const bundlrUploader = createBundlrUploader(umi);
 
   const [image, setImage] = useState<Uint8Array>();
   const [isloading, setIsLoading] = useState<boolean>(false);
-//   const connection = new Connection(clusterApiUrl("devnet"));
+  //   const connection = new Connection(clusterApiUrl("devnet"));
   const form = useForm<NftFormValues>({
     resolver: zodResolver(nftFormSchema),
     mode: "onChange",
@@ -92,8 +98,8 @@ export function CreateCertificateForm() {
         return
       }
 
-    //   const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
-    //   const [image_uri] = await umi.uploader.upload([imageGeneric]);
+      //   const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
+      //   const [image_uri] = await umi.uploader.upload([imageGeneric]);
       const metadata = {
         name: data.name,
         description: data.description,
@@ -111,18 +117,18 @@ export function CreateCertificateForm() {
         },
         creators: []
       };
-    //   const metadat_uri = await umi.uploader.uploadJson(metadata);
+      //   const metadat_uri = await umi.uploader.uploadJson(metadata);
 
-    //   let tx = await createNft(umi, {
-    //     mint: mint,
-    //     name: data.name,
-    //     uri: metadat_uri,
-    //     sellerFeeBasisPoints: percentAmount(parseInt(`${data.royalty}`)),
-    //     isCollection: true,
-    //   })
-    //   let result = await tx.sendAndConfirm(umi);
-    //   const signature = base58.encode(result.signature);
-    //   console.log("signature ", signature);
+      //   let tx = await createNft(umi, {
+      //     mint: mint,
+      //     name: data.name,
+      //     uri: metadat_uri,
+      //     sellerFeeBasisPoints: percentAmount(parseInt(`${data.royalty}`)),
+      //     isCollection: true,
+      //   })
+      //   let result = await tx.sendAndConfirm(umi);
+      //   const signature = base58.encode(result.signature);
+      //   console.log("signature ", signature);
     } catch (e: any) {
       console.log(e.message)
     } finally {
@@ -137,14 +143,24 @@ export function CreateCertificateForm() {
       <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0  rounded-md border border-dashed">
 
         <div className="lg:p-8 ">
-          <ImagePicker setImage={setImage} />
+          <Image
+            src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${certId}.png`}
+            alt="collection"
+            width="0"
+            height="0"
+            sizes="100vw"
+            className={cn(
+              `h-auto w-full object-cover transition-all `
+            )}
+          />
+
 
         </div>
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col  space-y-6 sm:w-[450px]">
             <div className="flex flex-col space-y-2 text-left">
               <h1 className="text-2xl font-semibold tracking-tight">
-                Create collection NFT
+                Create collection Certificate
               </h1>
               <p className="text-sm text-muted-foreground">
                 Creating a collection NFT is required to ensure your NFTs are easily searchable and grouped together in wallets and marketplaces.
@@ -166,7 +182,23 @@ export function CreateCertificateForm() {
                   <TabsContent
                     value="basics"
                     className=" h-[29rem] border-none p-0 outline-none"
-                  ><FormField
+                  >
+                    <Label className="">Upload Media</Label>
+                    <MediaPicker
+                      onChange={async (e) => {
+                        setIsLoading(true);
+                        // const a = await uploadToCloudinary(e);
+                        // setImageUrl(a);
+                        setIsLoading(false);
+                      }}
+                      onReset={() => {
+                        // setImageUrl('');
+                        setIsLoading(false);
+                      }}
+                      compact
+                      label="Upload certificate cover"
+                    />
+                    <FormField
                       control={form.control}
                       name="name"
                       render={({ field }) => (
