@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import React from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
+import { useRouter } from 'next/router'
 
 
 interface CertificateTemplateProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -36,7 +37,7 @@ export function CertificateTemplate({
   className,
   ...props
 }: CertificateTemplateProps) {
-
+  const router = useRouter()
   const [open, setOpen] = React.useState(false)
   return (
     <div className={cn("space-y-3", className)} {...props}>
@@ -69,7 +70,7 @@ export function CertificateTemplate({
             </CardContent>
             <CardFooter className="flex justify-end gap-6">
               <Button variant="outline">Cancel</Button>
-              <Button onClick={() => setOpen(false)} >Deploy</Button>
+              <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)} >Deploy</Button>
             </CardFooter>
           </Card>
         </AlertDialogContent>
