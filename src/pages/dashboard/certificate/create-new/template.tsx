@@ -41,21 +41,10 @@ const CertificatePage = () => {
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
-                <div className="space-between flex items-center">
-
-                    <div className="ml-auto mr-4">
-                        <Link href="/dashboard/certificate/create-new/template">
-                            <Button>
-                                <PlusCircledIcon className="mr-2 h-4 w-4" />
-                                Create New
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
-                            Certificate List
+                            Your Organization Template
                         </h2>
 
                     </div>
@@ -65,10 +54,38 @@ const CertificatePage = () => {
                     <ScrollArea>
                         <div className="flex space-x-4 pb-4">
                             {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
-                                <CertificateCard
+                                <CertificateTemplate
                                     key={item.name}
                                     data={item}
-                                    className="w-[250px]"
+                                    className="w-[150px]"
+                                    aspectRatio="square"
+                                    width={150}
+                                    height={150}
+                                />
+                            ))}
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+                </div>
+                <div className="mt-6 space-y-1">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        Public Template
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Demo Template
+                    </p>
+                </div>
+                <Separator className="my-4" />
+                <div className="relative">
+                    <ScrollArea>
+                        <div className="flex space-x-4 pb-4">
+
+
+                            {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
+                                <CertificateTemplate
+                                    key={item.name}
+                                    data={item}
+                                    className="w-[150px]"
                                     aspectRatio="square"
                                     width={150}
                                     height={150}

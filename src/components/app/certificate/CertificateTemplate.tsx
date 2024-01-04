@@ -76,14 +76,14 @@ export function CertificateTemplate({
       </AlertDialog>
 
 
-      <div className="overflow-hidden rounded-md" onClick={() => setOpen(true)}>
+      <div className="overflow-hidden rounded-md border-solid	 border-2" onClick={() => setOpen(true)}>
         <Image
           src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
           alt={data?.id || "error"}
           width={width}
           height={height}
           className={cn(
-            "h-auto w-auto object-cover transition-all hover:scale-105",
+            "h-auto w-auto object-cover  transition-all hover:scale-105",
             aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
           )}
         />
