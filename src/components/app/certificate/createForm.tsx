@@ -38,7 +38,7 @@ import { siteConfig } from "@/config/site"
 import * as base58 from "bs58"
 import { MediaPicker } from "degen"
 import { Label } from "recharts"
-import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
+import { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
 
 const nftFormSchema = z.object({
   name: z
@@ -144,7 +144,7 @@ export function CreateCertificateForm(props:any) {
 
         <div className="lg:p-8 ">
           <Image
-            src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${certId}.png`}
+            src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${certId}.png`}
             alt="collection"
             width="0"
             height="0"

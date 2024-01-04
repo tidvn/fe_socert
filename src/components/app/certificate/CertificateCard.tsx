@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
+import { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
 
 
 interface CertificateCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -43,7 +43,7 @@ export function CertificateCard({
 
       <div className="overflow-hidden rounded-md border-solid	 border-2">
         <Image
-          src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
+          src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
           alt={data?.id || "error"}
           width={width}
           height={height}

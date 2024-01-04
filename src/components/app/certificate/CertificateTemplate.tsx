@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { NEXT_PUBLIC_BACKEND_URL } from "@/config/env"
 import { useRouter } from 'next/router'
+import { NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
 
 
 interface CertificateTemplateProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,15 +52,15 @@ export function CertificateTemplate({
               <div className="space-y-4">
                 <div className="grid grid-cols-7 gap-x-8 items-center">
                   <div className="col-span-5">
-                    <div className="rounded-md border-2 border-dashed	border-gray-600">
+                    <div className="rounded-md border-2 border-dashed	border-gray-600 flex items-center justify-center ">
                       <Image
-                        src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
+                        src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
                         alt="collection"
                         width="0"
                         height="0"
                         sizes="100vw"
                         className={cn(
-                          `h-auto w-full object-cover transition-all `
+                          `max-h-[800px] w-auto object-cover transition-all p-1`
                         )}
                       /></div>
                   </div>
@@ -69,7 +69,7 @@ export function CertificateTemplate({
               </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-6">
-              <Button variant="outline">Cancel</Button>
+              <Button onClick={() => setOpen(false)} variant="outline">Cancel</Button>
               <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)} >Deploy</Button>
             </CardFooter>
           </Card>
@@ -79,7 +79,7 @@ export function CertificateTemplate({
 
       <div className="overflow-hidden rounded-md border-solid	 border-2" onClick={() => setOpen(true)}>
         <Image
-          src={`${NEXT_PUBLIC_BACKEND_URL}/image/template/${data.id}.png`}
+          src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
           alt={data?.id || "error"}
           width={width}
           height={height}
