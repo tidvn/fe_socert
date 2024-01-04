@@ -19,25 +19,30 @@ import { PodcastEmptyPlaceholder } from "@/components/app/certificate/podcast-em
 import { Sidebar } from "@/components/app/certificate/sidebar"
 import { listenNowAlbums, madeForYouAlbums } from "@/components/app/certificate/data/albums"
 import { playlists } from "@/components/app/certificate/data/playlists"
-import { ReactElement } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import DashboardLayout from "@/components/layout/dashboard/dashboard"
 import Link from "next/link"
 import CertificatePageLayout from "@/components/app/certificate/layout/Layout"
 import fetchClient from "@/utils/fetch-client"
 import { isNil } from "lodash"
 import { CertificateCard } from "@/components/app/certificate/CertificateCard"
+import { useSession } from "next-auth/react"
+
 
 
 
 
 
 const CertificatePage = () => {
+    const { data: session }: any = useSession()
+    const { userInfo } = session
     const { data, error, isLoading } = useSWR({
         method: "GET",
-        endpoint: "/certificate/template"
-    }, fetchClient);
-    const listTemplate: any = data?.data.data
-    console.log(listTemplate)
+        endpoint: `/certificate/organization/${userInfo?.currentOrg}/template`,
+    }, fetchClient, { refreshInterval: 500 });
+
+    console.log(data)
+    const { privateCertificates, publicCertificates }: any = data?.data?.data
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -53,7 +58,7 @@ const CertificatePage = () => {
                 <div className="relative">
                     <ScrollArea>
                         <div className="flex space-x-4 pb-4">
-                            {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
+                            {(!isNil(privateCertificates) && isNil(error)) && privateCertificates.map((item: any) => (
                                 <CertificateTemplate
                                     key={item.name}
                                     data={item}
@@ -81,7 +86,7 @@ const CertificatePage = () => {
                         <div className="flex space-x-4 pb-4">
 
 
-                            {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
+                            {(!isNil(publicCertificates) && isNil(error)) && publicCertificates.map((item: any) => (
                                 <CertificateTemplate
                                     key={item.name}
                                     data={item}

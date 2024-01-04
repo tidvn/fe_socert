@@ -1,8 +1,8 @@
-import { CreateCertificateForm } from "@/components/app/certificate/createForm"
 import CertificatePageLayout from "@/components/app/certificate/layout/Layout"
 import DashboardLayout from "@/components/layout/dashboard/dashboard"
 import { ReactElement } from "react"
 import { useRouter } from 'next/router'
+import { CreateCertificateCollectionForm } from "@/components/app/certificate/createCollectionForm"
 
 const CreateCertificatePage = () => {
 
@@ -10,7 +10,7 @@ const CreateCertificatePage = () => {
     const { id } = router.query
     return (
         <>
-            <CreateCertificateForm certId={id}  />
+            <CreateCertificateCollectionForm certId={id}  />
         </>
     )
 }

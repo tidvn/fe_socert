@@ -38,7 +38,12 @@ import { siteConfig } from "@/config/site"
 import * as base58 from "bs58"
 import { MediaPicker } from "degen"
 import { Label } from "recharts"
-import { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
+import { NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
+import { useWallet } from "@solana/wallet-adapter-react"
+import { Connection, clusterApiUrl } from "@solana/web3.js"
+import { useSession } from "next-auth/react"
+import { uploadToCloudinary } from "@/utils/upload"
+import fetchClient from "@/utils/fetch-client"
 
 const nftFormSchema = z.object({
   name: z
@@ -62,14 +67,25 @@ const nftFormSchema = z.object({
       })
     )
     .optional(),
-
+  attestor: z
+    .array(
+      z.object({
+        value: z.string(),
+      })
+    )
+    .optional(),
 })
+
 
 type NftFormValues = z.infer<typeof nftFormSchema>
 
-export function CreateCertificateForm(props:any) {
+export function CreateCertificateCollectionForm(props: any) {
+
   const { certId } = props
-  //   const wallet = useWallet();
+  const wallet = useWallet();
+  const { data: session, status } = useSession();
+
+
   //   const umi = createUmi("https://api.devnet.solana.com")
   //     .use(walletAdapterIdentity(wallet))
   //     .use(mplTokenMetadata())
@@ -77,47 +93,63 @@ export function CreateCertificateForm(props:any) {
 
   //   const mint = generateSigner(umi);
   //   // const bundlrUploader = createBundlrUploader(umi);
+  if (status != "authenticated") {
+    return;
+  }
 
-  const [image, setImage] = useState<Uint8Array>();
-  const [isloading, setIsLoading] = useState<boolean>(false);
-  //   const connection = new Connection(clusterApiUrl("devnet"));
+  // const [image, setImage] = useState<Uint8Array>();
+  const [state, setState] = useState<string>("idle");
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const connection = new Connection(clusterApiUrl("devnet"));
+  const { userInfo }: any = session
+  const defaultValues: Partial<NftFormValues> = userInfo ? { attestor: [{ value: userInfo.walletAddress }] } : {}
   const form = useForm<NftFormValues>({
     resolver: zodResolver(nftFormSchema),
+    defaultValues,
     mode: "onChange",
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields: attFields, append: attAppend, remove: attRemove } = useFieldArray({
     name: "attributes",
+    control: form.control,
+  })
+
+  const { fields: attestorFields, append: attestorAppend, remove: attestorRemove } = useFieldArray({
+    name: "attestor",
     control: form.control,
   })
 
   async function onSubmit(data: NftFormValues) {
     try {
-      setIsLoading(true)
-      if (!image) {
+      setState("Intializing...")
+      if (!imageUrl) {
         return
       }
-
+      setState("Create Metadata...")
       //   const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
       //   const [image_uri] = await umi.uploader.upload([imageGeneric]);
       const metadata = {
         name: data.name,
         description: data.description,
-        website: data.link,
-        image: "image_uri",
+        image: imageUrl,
         attributes: data.attributes,
-        seller_fee_basis_points: 100 * parseInt(data.royalty ? data.royalty : ""),
-        properties: {
-          images: [
-            {
-              type: "image/png",
-              uri: "image_uri"
-            },
-          ]
-        },
-        creators: []
+        creators: data.attestor,
+        certificate: "socert"
       };
-      //   const metadat_uri = await umi.uploader.uploadJson(metadata);
+      const templateId = certId;
+      const organizationId = userInfo.currentOrg;
+
+      // const metadat_uri = await umi.uploader.uploadJson(metadata);
+      const metadat_uri = await fetchClient({
+        method: "POST",
+        endpoint: "/certificate/collection/create",
+        body: {
+          metadata,
+          templateId,
+          organizationId
+        }
+      })
+      console.log("metadat_uri ", metadat_uri);
 
       //   let tx = await createNft(umi, {
       //     mint: mint,
@@ -132,45 +164,52 @@ export function CreateCertificateForm(props:any) {
     } catch (e: any) {
       console.log(e.message)
     } finally {
-      setIsLoading(false)
+      setState("idle")
     }
 
   }
 
   return (
     <div className="h-full px-4 py-6 lg:px-8">
+      <h1 className="text-2xl font-semibold tracking-tight">
+        Create collection Certificate
+      </h1>
 
-      <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0  rounded-md border border-dashed">
+
+      <div className="mt-5 container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0  rounded-md border border-dashed">
 
         <div className="lg:p-8 ">
-          <Image
-            src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${certId}.png`}
-            alt="collection"
-            width="0"
-            height="0"
-            sizes="100vw"
-            className={cn(
-              `h-auto w-full object-cover transition-all `
-            )}
-          />
+          <div className="mx-auto flex w-full flex-col  space-y-6 sm:w-[450px]">
+            <div className="flex flex-col space-y-2 text-left">
+
+
+            </div>
+            <div className="">
+              <Image
+                src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${certId}.png`}
+                alt="collection"
+                width="0"
+                height="0"
+                sizes="100vw"
+                className={cn(
+                  `h-auto w-full object-cover transition-all border-2	p-2 `
+                )}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Upon completion, your student will receive an nft that looks like this
+            </p>
+          </div>
 
 
         </div>
         <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col  space-y-6 sm:w-[450px]">
-            <div className="flex flex-col space-y-2 text-left">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                Create collection Certificate
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Creating a collection NFT is required to ensure your NFTs are easily searchable and grouped together in wallets and marketplaces.
-              </p>
+          <div className="mx-auto flex w-full flex-col space-y-6 sm:w-[450px]">
 
-            </div>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <Tabs defaultValue="basics" className="h-full space-y-6">
+                <Tabs defaultValue="basics" className="h-[650px] space-y-6">
                   <div className="space-between flex items-center">
                     <TabsList>
                       <TabsTrigger value="basics" className="relative">
@@ -186,14 +225,13 @@ export function CreateCertificateForm(props:any) {
                     <Label className="">Upload Media</Label>
                     <MediaPicker
                       onChange={async (e) => {
-                        setIsLoading(true);
-                        // const a = await uploadToCloudinary(e);
-                        // setImageUrl(a);
-                        setIsLoading(false);
+                        setState("uploading...");
+                        setImageUrl(await uploadToCloudinary(e));
+                        setState("idle");
                       }}
                       onReset={() => {
-                        // setImageUrl('');
-                        setIsLoading(false);
+                        setImageUrl('');
+                        setState("idle");
                       }}
                       compact
                       label="Upload certificate cover"
@@ -231,35 +269,51 @@ export function CreateCertificateForm(props:any) {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="link"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Link</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter the website or link to your project" {...field} />
-                          </FormControl>
+                    <div>
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {attestorFields.map((field, index) => (<>
+                        <div className="mt-4 grid grid-cols-12 gap-2">
+                          <div className="col-span-11">
+                            <FormField
+                              control={form.control}
+                              key={field.id}
+                              name={`attestor.${index}.value`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input  {...field} />
+                                  </FormControl>
+                                  <FormMessage />
 
-                    {/* <FormField
-                      control={form.control}
-                      name="royalty"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Sales Royalties</FormLabel>
-                          <FormControl>
-                            <Input type="number"  {...field} />
-                          </FormControl>
+                                </FormItem>
+                              )}
+                            /></div>
+                          <div className="col-span-1"><Button
+                            type="button"
+                            variant="outline"
+                            className="p-2"
+                            onClick={() => attestorRemove(index)}
+                          >
+                            <TrashIcon />
+                          </Button></div>
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /> */}
+                        </div>
+
+                      </>
+
+                      ))}
+
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                        onClick={() => attestorAppend({ value: "" })}
+                      >
+                        Add Attestor
+                      </Button>
+                    </div>
 
 
                   </TabsContent>
@@ -268,7 +322,7 @@ export function CreateCertificateForm(props:any) {
                     className="h-[29rem] flex-col border-none p-0 data-[state=active]:flex"
                   >
                     <div>
-                      {fields.map((field, index) => (<>
+                      {attFields.map((field, index) => (<>
                         <div className="mt-4 grid grid-cols-12 gap-2">
                           <div className="col-span-5">
                             <FormField
@@ -305,7 +359,7 @@ export function CreateCertificateForm(props:any) {
                             type="button"
                             variant="outline"
                             className="p-2"
-                            onClick={() => remove(index)}
+                            onClick={() => attRemove(index)}
                           >
                             <TrashIcon />
                           </Button></div>
@@ -320,7 +374,7 @@ export function CreateCertificateForm(props:any) {
                         variant="outline"
                         size="sm"
                         className="mt-2"
-                        onClick={() => append({ trait_type: "", value: "" })}
+                        onClick={() => attAppend({ trait_type: "", value: "" })}
                       >
                         Add Property
                       </Button>
@@ -328,13 +382,18 @@ export function CreateCertificateForm(props:any) {
                     <Separator className="my-4" />
                   </TabsContent>
                 </Tabs>
-                <Button type="submit" disabled={isloading}>{isloading ? "Creating..." : "Create Collection"} </Button>
+                {/* {
+                  wallet.connected ?
+                   <Button type="submit" disabled={isloading}>{isloading ? "Creating..." : "Create Collection"} </Button>
+                    : <Button onClick={() => wallet.connect()} type="button" disabled={isloading}>{isloading ? "Creating..." : "Connect Wallet"} </Button>
+                } */}
+                <Button type="submit" disabled={state != "idle"}>{state != "idle" ? state : "Create Collection"} </Button>
               </form>
             </Form>
           </div>
         </div>
       </div>
-    </div>
+    </div >
 
 
   )

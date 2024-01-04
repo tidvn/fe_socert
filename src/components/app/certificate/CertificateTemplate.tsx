@@ -54,7 +54,7 @@ export function CertificateTemplate({
                   <div className="col-span-5">
                     <div className="rounded-md border-2 border-dashed	border-gray-600 flex items-center justify-center ">
                       <Image
-                        src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
+                        src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
                         alt="collection"
                         width="0"
                         height="0"
@@ -79,7 +79,7 @@ export function CertificateTemplate({
 
       <div className="overflow-hidden rounded-md border-solid	 border-2" onClick={() => setOpen(true)}>
         <Image
-          src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
+          src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
           alt={data?.id || "error"}
           width={width}
           height={height}

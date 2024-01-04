@@ -37,7 +37,7 @@ const CertificatePage = () => {
         endpoint: "/certificate/template"
     }, fetchClient);
     const listTemplate: any = data?.data.data
-    console.log(listTemplate)
+    // console.log(listTemplate)
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -63,7 +63,7 @@ const CertificatePage = () => {
                 <Separator className="my-4" />
                 <div className="relative">
                     {/* <ScrollArea> */}
-                        <div className="flex space-x-4 pb-4">
+                        {/* <div className="flex space-x-4 pb-4">
                             {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
                                 <CertificateCard
                                     key={item.name}
@@ -74,7 +74,7 @@ const CertificatePage = () => {
                                     height={150}
                                 />
                             ))}
-                        </div>
+                        </div> */}
                         {/* <ScrollBar orientation="horizontal" /> */}
                     {/* </ScrollArea> */}
                 </div>

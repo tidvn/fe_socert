@@ -43,7 +43,7 @@ export function CertificateCard({
 
       <div className="overflow-hidden rounded-md border-solid	 border-2">
         <Image
-          src={`${NEXT_PUBLIC_IMAGE_CDN}/api/image/template/${data.id}.png`}
+          src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
           alt={data?.id || "error"}
           width={width}
           height={height}

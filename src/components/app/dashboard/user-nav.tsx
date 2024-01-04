@@ -15,14 +15,24 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useWallet } from "@solana/wallet-adapter-react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 
 export function UserNav() {
   const { data: session, status } = useSession();
-  const { userInfo }:any = session
+  const { userInfo }: any = session
   const { setTheme, theme } = useTheme()
+  const [copied, setCopied] = useState(false);
+
+
+  const wallet = useWallet();
+
   if (status != "authenticated") {
+    return;
+  }
+  if (!wallet.publicKey) {
     return;
   }
   return (
@@ -38,7 +48,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{`${userInfo.firstName} ${userInfo.lastName} `}</p>
+            <p className="text-sm font-medium leading-none">{`${userInfo.walletAddress.substring(0, 20)}...`}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {userInfo.email}
             </p>
@@ -46,18 +56,13 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          <DropdownMenuItem onClick={async () => {
+            await navigator.clipboard.writeText(userInfo.walletAddress);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 400);
+          }}>
+            {copied ? 'Copied' : 'Copy Address'}
           </DropdownMenuItem>
-          {/* <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem> */}
-          {/* <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
             Toggle theme
           </DropdownMenuItem>
@@ -65,7 +70,6 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
           Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
