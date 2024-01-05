@@ -16,8 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import { cn } from "@/utils/cn";
 
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
@@ -25,27 +23,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@radix-ui/react-separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
-import { ImagePicker } from "@/components/app/certificate/ImagePicker"
-// import { uploadImageToIPFS, uploadMetadataToIPFS } from "@/lib/upload"
-// import { Connection, clusterApiUrl } from "@solana/web3.js";
-// import { useWallet } from "@solana/wallet-adapter-react"
+import Image from "next/image"
+// import { ImagePicker } from "@/components/app/nft-studio/ImagePicker"
+
+import { Connection, clusterApiUrl } from "@solana/web3.js";
+
+import { useWallet } from "@solana/wallet-adapter-react"
 // import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 // import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters"
 // import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata"
 // import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount, createGenericFile } from "@metaplex-foundation/umi"
 // import { nftStorageUploader } from '@metaplex-foundation/umi-uploader-nft-storage'
-import { siteConfig } from "@/config/site"
+
 import * as base58 from "bs58"
-import { MediaPicker } from "degen"
-import { Label } from "recharts"
+
 import { NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
-import { useWallet } from "@solana/wallet-adapter-react"
-import { Connection, clusterApiUrl } from "@solana/web3.js"
+import { cn } from "@/utils/cn"
 import { useSession } from "next-auth/react"
-import { uploadToCloudinary } from "@/utils/upload"
 import fetchClient from "@/utils/fetch-client"
 
-const nftFormSchema = z.object({
+const certificateFormSchema = z.object({
   name: z
     .string()
     .min(2, {
@@ -76,39 +73,27 @@ const nftFormSchema = z.object({
     .optional(),
 })
 
-
-type NftFormValues = z.infer<typeof nftFormSchema>
+type CertificateFormValues = z.infer<typeof certificateFormSchema>
 
 export function CreateCertificateCollectionForm(props: any) {
-
   const { certId } = props
   const wallet = useWallet();
-  const { data: session, status } = useSession();
+  // const umi = createUmi("https://api.devnet.solana.com")
+  //   .use(walletAdapterIdentity(wallet))
+  //   .use(mplTokenMetadata())
+  // umi.use(nftStorageUploader({ token: siteConfig.nftstorage_api_key }))
 
-
-  //   const umi = createUmi("https://api.devnet.solana.com")
-  //     .use(walletAdapterIdentity(wallet))
-  //     .use(mplTokenMetadata())
-  //   umi.use(nftStorageUploader({ token: siteConfig.nftstorage_api_key }))
-
-  //   const mint = generateSigner(umi);
-  //   // const bundlrUploader = createBundlrUploader(umi);
-
-
-  // const [image, setImage] = useState<Uint8Array>();
+  // const mint = generateSigner(umi);
+  // const bundlrUploader = createBundlrUploader(umi);
   const [state, setState] = useState<string>("idle");
   const [imageUrl, setImageUrl] = useState<string>('');
   const connection = new Connection(clusterApiUrl("devnet"));
+  const { data: session, status } = useSession();
+
   const { userInfo }: any = session
 
-  if (status != "authenticated") {
-    return;
-  }
-  
-  const defaultValues: Partial<NftFormValues> = userInfo ? { attestor: [{ value: userInfo.walletAddress }] } : {}
-  const form = useForm<NftFormValues>({
-    resolver: zodResolver(nftFormSchema),
-    defaultValues,
+  const form = useForm<CertificateFormValues>({
+    resolver: zodResolver(certificateFormSchema),
     mode: "onChange",
   })
 
@@ -117,22 +102,20 @@ export function CreateCertificateCollectionForm(props: any) {
     control: form.control,
   })
 
-  const { fields: attestorFields, append: attestorAppend, remove: attestorRemove } = useFieldArray({
+  const { fields: attestorFields, append: attestorAppend, remove: attestorRemove, update: attestorUpdate } = useFieldArray({
     name: "attestor",
     control: form.control,
   })
-  if (status != "authenticated") {
-    return;
+  if (userInfo.walletAddress != attestorFields[0]?.value) {
+    attestorUpdate(0, { value: userInfo.walletAddress })
   }
-  async function onSubmit(data: NftFormValues) {
+  async function onSubmit(data: CertificateFormValues) {
     try {
       setState("Intializing...")
       if (!imageUrl) {
         return
       }
       setState("Create Metadata...")
-      //   const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
-      //   const [image_uri] = await umi.uploader.upload([imageGeneric]);
       const metadata = {
         name: data.name,
         description: data.description,
@@ -144,7 +127,6 @@ export function CreateCertificateCollectionForm(props: any) {
       const templateId = certId;
       const organizationId = userInfo.currentOrg;
 
-      // const metadat_uri = await umi.uploader.uploadJson(metadata);
       const metadat_uri = await fetchClient({
         method: "POST",
         endpoint: "/certificate/collection/create",
@@ -156,16 +138,37 @@ export function CreateCertificateCollectionForm(props: any) {
       })
       console.log("metadat_uri ", metadat_uri);
 
-      //   let tx = await createNft(umi, {
-      //     mint: mint,
-      //     name: data.name,
-      //     uri: metadat_uri,
-      //     sellerFeeBasisPoints: percentAmount(parseInt(`${data.royalty}`)),
-      //     isCollection: true,
-      //   })
-      //   let result = await tx.sendAndConfirm(umi);
-      //   const signature = base58.encode(result.signature);
-      //   console.log("signature ", signature);
+      // const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
+      // const [image_uri] = await umi.uploader.upload([imageGeneric]);
+      // const metadata = {
+      //   name: data.name,
+      //   description: data.description,
+      //   website: data.link,
+      //   image: image_uri,
+      //   attributes: data.attributes,
+      //   seller_fee_basis_points: 100 * parseInt(data.royalty ? data.royalty : ""),
+      //   properties: {
+      //     images: [
+      //       {
+      //         type: "image/png",
+      //         uri: image_uri
+      //       },
+      //     ]
+      //   },
+      //   creators: []
+      // };
+      // const metadat_uri = await umi.uploader.uploadJson(metadata);
+
+      // let tx = await createNft(umi, {
+      //   mint: mint,
+      //   name: data.name,
+      //   uri: metadat_uri,
+      //   sellerFeeBasisPoints: percentAmount(parseInt(`${data.royalty}`)),
+      //   isCollection: true,
+      // })
+      // let result = await tx.sendAndConfirm(umi);
+      // const signature = base58.encode(result.signature);
+      // console.log("signature ", signature);
     } catch (e: any) {
       console.log(e.message)
     } finally {
@@ -179,7 +182,6 @@ export function CreateCertificateCollectionForm(props: any) {
       <h1 className="text-2xl font-semibold tracking-tight">
         Create collection Certificate
       </h1>
-
 
       <div className="mt-5 container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0  rounded-md border border-dashed">
 
@@ -206,15 +208,22 @@ export function CreateCertificateCollectionForm(props: any) {
             </p>
           </div>
 
-
         </div>
         <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col space-y-6 sm:w-[450px]">
+          <div className="mx-auto flex w-full flex-col  space-y-6 sm:w-[450px]">
+            <div className="flex flex-col space-y-2 text-left">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Create collection NFT
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Creating a collection NFT is required to ensure your NFTs are easily searchable and grouped together in wallets and marketplaces.
+              </p>
 
+            </div>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <Tabs defaultValue="basics" className="h-[650px] space-y-6">
+                <Tabs defaultValue="basics" className="h-full space-y-6">
                   <div className="space-between flex items-center">
                     <TabsList>
                       <TabsTrigger value="basics" className="relative">
@@ -226,22 +235,7 @@ export function CreateCertificateCollectionForm(props: any) {
                   <TabsContent
                     value="basics"
                     className=" h-[29rem] border-none p-0 outline-none"
-                  >
-                    <Label className="">Upload Media</Label>
-                    <MediaPicker
-                      onChange={async (e) => {
-                        setState("uploading...");
-                        setImageUrl(await uploadToCloudinary(e));
-                        setState("idle");
-                      }}
-                      onReset={() => {
-                        setImageUrl('');
-                        setState("idle");
-                      }}
-                      compact
-                      label="Upload certificate cover"
-                    />
-                    <FormField
+                  ><FormField
                       control={form.control}
                       name="name"
                       render={({ field }) => (
@@ -387,18 +381,13 @@ export function CreateCertificateCollectionForm(props: any) {
                     <Separator className="my-4" />
                   </TabsContent>
                 </Tabs>
-                {/* {
-                  wallet.connected ?
-                   <Button type="submit" disabled={isloading}>{isloading ? "Creating..." : "Create Collection"} </Button>
-                    : <Button onClick={() => wallet.connect()} type="button" disabled={isloading}>{isloading ? "Creating..." : "Connect Wallet"} </Button>
-                } */}
                 <Button type="submit" disabled={state != "idle"}>{state != "idle" ? state : "Create Collection"} </Button>
               </form>
             </Form>
           </div>
         </div>
       </div>
-    </div >
+    </div>
 
 
   )
