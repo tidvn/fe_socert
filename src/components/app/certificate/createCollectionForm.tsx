@@ -287,9 +287,9 @@ export function CreateCertificateCollectionForm(props: any) {
                       )}
                     />
                     <div>
-                    <Label className="">List of Authenticator</Label>
+                    <Label className="mt-4">List of Authenticator</Label>
                       {authenticatorFields.map((field, index) => (<>
-                        <div className="mt-4 grid grid-cols-12 gap-2">
+                        <div className="grid grid-cols-12 gap-2">
                           <div className="col-span-11">
                             <FormField
                               control={form.control}
