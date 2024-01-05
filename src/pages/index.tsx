@@ -88,7 +88,7 @@ export default function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">Database</h3>
                 <p className="text-sm text-muted-foreground">
-                  ORM using Prisma and deployed on PlanetScale.
+                  ORM using Prisma and Use Thised on PlanetScale.
                 </p>
               </div>
             </div>

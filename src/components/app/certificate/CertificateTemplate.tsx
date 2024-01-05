@@ -70,7 +70,7 @@ export function CertificateTemplate({
             </CardContent>
             <CardFooter className="flex justify-end gap-6">
               <Button onClick={() => setOpen(false)} variant="outline">Cancel</Button>
-              <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)} >Deploy</Button>
+              <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)} >Use This</Button>
             </CardFooter>
           </Card>
         </AlertDialogContent>
@@ -92,7 +92,6 @@ export function CertificateTemplate({
 
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{data?.name}</h3>
-        <p className="text-xs text-muted-foreground">mô tả</p>
       </div>
     </div>
   )

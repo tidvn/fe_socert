@@ -41,6 +41,9 @@ import { NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
 import { cn } from "@/utils/cn"
 import { useSession } from "next-auth/react"
 import fetchClient from "@/utils/fetch-client"
+import { Label } from "@/components/ui/label"
+import { MediaPicker } from "degen"
+import { uploadToCloudinary } from "@/utils/upload"
 
 const certificateFormSchema = z.object({
   name: z
@@ -235,7 +238,22 @@ export function CreateCertificateCollectionForm(props: any) {
                   <TabsContent
                     value="basics"
                     className=" h-[29rem] border-none p-0 outline-none"
-                  ><FormField
+                  >
+                    <Label className="">Upload Media</Label>
+                    <MediaPicker
+                      onChange={async (e) => {
+                        setState("uploading...");
+                        setImageUrl(await uploadToCloudinary(e));
+                        setState("idle");
+                      }}
+                      onReset={() => {
+                        setImageUrl('');
+                        setState("idle");
+                      }}
+                      compact
+                      label="Upload certificate cover"
+                    />
+                    <FormField
                       control={form.control}
                       name="name"
                       render={({ field }) => (
