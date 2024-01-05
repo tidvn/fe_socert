@@ -67,7 +67,7 @@ const certificateFormSchema = z.object({
       })
     )
     .optional(),
-  attestor: z
+  authenticator: z
     .array(
       z.object({
         value: z.string(),
@@ -105,12 +105,12 @@ export function CreateCertificateCollectionForm(props: any) {
     control: form.control,
   })
 
-  const { fields: attestorFields, append: attestorAppend, remove: attestorRemove, update: attestorUpdate } = useFieldArray({
-    name: "attestor",
+  const { fields: authenticatorFields, append: authenticatorAppend, remove: authenticatorRemove, update: authenticatorUpdate } = useFieldArray({
+    name: "authenticator",
     control: form.control,
   })
-  if (userInfo.walletAddress != attestorFields[0]?.value) {
-    attestorUpdate(0, { value: userInfo.walletAddress })
+  if (userInfo.walletAddress != authenticatorFields[0]?.value) {
+    authenticatorUpdate(0, { value: userInfo.walletAddress })
   }
   async function onSubmit(data: CertificateFormValues) {
     try {
@@ -124,7 +124,7 @@ export function CreateCertificateCollectionForm(props: any) {
         description: data.description,
         image: imageUrl,
         attributes: data.attributes,
-        creators: data.attestor,
+        creators: data.authenticator,
         certificate: "socert"
       };
       const templateId = certId;
@@ -287,14 +287,14 @@ export function CreateCertificateCollectionForm(props: any) {
                       )}
                     />
                     <div>
-
-                      {attestorFields.map((field, index) => (<>
+                    <Label className="">List of Authenticator</Label>
+                      {authenticatorFields.map((field, index) => (<>
                         <div className="mt-4 grid grid-cols-12 gap-2">
                           <div className="col-span-11">
                             <FormField
                               control={form.control}
                               key={field.id}
-                              name={`attestor.${index}.value`}
+                              name={`authenticator.${index}.value`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
@@ -309,7 +309,7 @@ export function CreateCertificateCollectionForm(props: any) {
                             type="button"
                             variant="outline"
                             className="p-2"
-                            onClick={() => attestorRemove(index)}
+                            onClick={() => authenticatorRemove(index)}
                           >
                             <TrashIcon />
                           </Button></div>
@@ -326,9 +326,9 @@ export function CreateCertificateCollectionForm(props: any) {
                         variant="outline"
                         size="sm"
                         className="mt-2"
-                        onClick={() => attestorAppend({ value: "" })}
+                        onClick={() => authenticatorAppend({ value: "" })}
                       >
-                        Add Attestor
+                        Add Authenticator
                       </Button>
                     </div>
 
