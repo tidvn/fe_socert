@@ -33,7 +33,7 @@ const CertificatePage = () => {
     const { userInfo } = session
     const { data, error, isLoading } = useSWR({
         method: "GET",
-        endpoint: `/certificate/organization/${userInfo?.currentOrg}/template`,
+        endpoint: `/organization/${userInfo?.currentOrg}/template`,
     }, fetchClient, { refreshInterval: 500 });
 
 
