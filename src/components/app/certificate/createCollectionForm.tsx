@@ -93,15 +93,18 @@ export function CreateCertificateCollectionForm(props: any) {
 
   //   const mint = generateSigner(umi);
   //   // const bundlrUploader = createBundlrUploader(umi);
-  if (status != "authenticated") {
-    return;
-  }
+
 
   // const [image, setImage] = useState<Uint8Array>();
   const [state, setState] = useState<string>("idle");
   const [imageUrl, setImageUrl] = useState<string>('');
   const connection = new Connection(clusterApiUrl("devnet"));
   const { userInfo }: any = session
+
+  if (status != "authenticated") {
+    return;
+  }
+  
   const defaultValues: Partial<NftFormValues> = userInfo ? { attestor: [{ value: userInfo.walletAddress }] } : {}
   const form = useForm<NftFormValues>({
     resolver: zodResolver(nftFormSchema),
@@ -118,7 +121,9 @@ export function CreateCertificateCollectionForm(props: any) {
     name: "attestor",
     control: form.control,
   })
-
+  if (status != "authenticated") {
+    return;
+  }
   async function onSubmit(data: NftFormValues) {
     try {
       setState("Intializing...")
