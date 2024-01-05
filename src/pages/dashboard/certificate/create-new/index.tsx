@@ -28,11 +28,6 @@ import { isNil } from "lodash"
 import { CertificateCard } from "@/components/app/certificate/CertificateCard"
 import { useSession } from "next-auth/react"
 
-
-
-
-
-
 const CertificatePage = () => {
     const { data: session }: any = useSession()
     const { userInfo } = session
@@ -41,8 +36,9 @@ const CertificatePage = () => {
         endpoint: `/certificate/organization/${userInfo?.currentOrg}/template`,
     }, fetchClient, { refreshInterval: 500 });
 
-    console.log(data)
-    const { privateCertificates, publicCertificates }: any = data?.data?.data
+
+    const { privateCertificates, publicCertificates } = data?.data?.data || {}
+    // console
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -67,7 +63,7 @@ const CertificatePage = () => {
                                     width={150}
                                     height={150}
                                 />
-                            ))}
+                           ))}
                         </div>
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>
