@@ -18,9 +18,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     const wallet = useWallet();
 
-    React.useEffect(() => {
-        handleLogin()
-    }, [wallet.connected]);
+    // React.useEffect(() => {
+    //     handleLogin()
+    // }, [wallet.connected]);
 
     async function handleLogin() {
         try {
@@ -62,8 +62,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </div>
 
             </div>
-
-            <ConnectWallet />
+            {
+                wallet.connected
+                    ? (<button
+                        type="button"
+                        className={cn(buttonVariants())}
+                        onClick={handleLogin}
+                    >
+                        Sign To Login
+                    </button>)
+                    : (<ConnectWallet />)}
+            {/* <ConnectWallet /> */}
             {/* <button
                 type="button"
                 className={cn(buttonVariants())}

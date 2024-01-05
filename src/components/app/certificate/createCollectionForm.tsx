@@ -49,6 +49,7 @@ import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import router from "next/router"
 import { fetchShyft } from "@/utils/useShyft"
+import { ConnectWallet } from "../wallet/WalletButton"
 
 const certificateFormSchema = z.object({
   name: z
@@ -461,7 +462,11 @@ export function CreateCertificateCollectionForm(props: any) {
                       <Separator className="my-4" />
                     </TabsContent>
                   </Tabs>
-                  <Button type="submit" disabled={state != "idle"}>{state != "idle" ? state : "Create Collection"} </Button>
+                  {
+                    wallet.connected
+                      ? (<Button type="submit" disabled={state != "idle"}>{state != "idle" ? state : "Create Collection"} </Button>)
+                      : (<ConnectWallet />)}
+
                 </form>
               </Form>
             </div>
