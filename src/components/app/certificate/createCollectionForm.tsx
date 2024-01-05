@@ -29,21 +29,21 @@ import Image from "next/image"
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 
 import { useWallet } from "@solana/wallet-adapter-react"
-// import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
-// import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters"
-// import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata"
-// import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount, createGenericFile } from "@metaplex-foundation/umi"
-// import { nftStorageUploader } from '@metaplex-foundation/umi-uploader-nft-storage'
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
+import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters"
+import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata"
+import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount, createGenericFile } from "@metaplex-foundation/umi"
 
 import * as base58 from "bs58"
 
-import { NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
+import { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
 import { cn } from "@/utils/cn"
 import { useSession } from "next-auth/react"
 import fetchClient from "@/utils/fetch-client"
 import { Label } from "@/components/ui/label"
 import { MediaPicker } from "degen"
 import { uploadToCloudinary } from "@/utils/upload"
+import { set } from "lodash"
 
 const certificateFormSchema = z.object({
   name: z
@@ -81,13 +81,11 @@ type CertificateFormValues = z.infer<typeof certificateFormSchema>
 export function CreateCertificateCollectionForm(props: any) {
   const { certId } = props
   const wallet = useWallet();
-  // const umi = createUmi("https://api.devnet.solana.com")
-  //   .use(walletAdapterIdentity(wallet))
-  //   .use(mplTokenMetadata())
-  // umi.use(nftStorageUploader({ token: siteConfig.nftstorage_api_key }))
+  const umi = createUmi("https://api.devnet.solana.com")
+    .use(walletAdapterIdentity(wallet))
+    .use(mplTokenMetadata())
 
-  // const mint = generateSigner(umi);
-  // const bundlrUploader = createBundlrUploader(umi);
+  const signer = generateSigner(umi);
   const [state, setState] = useState<string>("idle");
   const [imageUrl, setImageUrl] = useState<string>('');
   const connection = new Connection(clusterApiUrl("devnet"));
@@ -124,12 +122,18 @@ export function CreateCertificateCollectionForm(props: any) {
         description: data.description,
         image: imageUrl,
         attributes: data.attributes,
+        properties: {
+          images: [{
+            "type": "image/png",
+            "uri": imageUrl
+          }]
+        },
         creators: data.authenticator?.map(item => item.value) || [],
       };
       const templateId = certId;
       const organizationId = userInfo.currentOrg;
 
-      const metadat_uri = await fetchClient({
+      const response = await fetchClient({
         method: "POST",
         endpoint: "/certificate/collection/create",
         body: {
@@ -138,7 +142,12 @@ export function CreateCertificateCollectionForm(props: any) {
           organizationId
         }
       })
-      console.log("metadat_uri ", metadat_uri);
+      if (response.status != 201) {
+        setState("Error")
+        return
+      }
+      const metadata_uri = `${NEXT_PUBLIC_BACKEND_URL}${response.data.data.metadata_path}`
+      console.log("metadat_uri ", metadata_uri);
 
       // const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
       // const [image_uri] = await umi.uploader.upload([imageGeneric]);
@@ -161,16 +170,18 @@ export function CreateCertificateCollectionForm(props: any) {
       // };
       // const metadat_uri = await umi.uploader.uploadJson(metadata);
 
-      // let tx = await createNft(umi, {
-      //   mint: mint,
-      //   name: data.name,
-      //   uri: metadat_uri,
-      //   sellerFeeBasisPoints: percentAmount(parseInt(`${data.royalty}`)),
-      //   isCollection: true,
-      // })
-      // let result = await tx.sendAndConfirm(umi);
-      // const signature = base58.encode(result.signature);
-      // console.log("signature ", signature);
+      let tx = await createNft(umi, {
+        mint: signer,
+        name: data.name,
+        uri: metadata_uri,
+        sellerFeeBasisPoints: percentAmount(0),
+        isCollection: true,
+      })
+
+
+      let result = await tx.sendAndConfirm(umi);
+      const signature = base58.encode(result.signature);
+      console.log("signature ", signature);
     } catch (e: any) {
       console.log(e.message)
     } finally {
@@ -286,7 +297,7 @@ export function CreateCertificateCollectionForm(props: any) {
                       )}
                     />
                     <div>
-                    <Label className="mt-4">List of Authenticator</Label>
+                      <Label className="mt-4">List of Authenticator</Label>
                       {authenticatorFields.map((field, index) => (<>
                         <div className="grid grid-cols-12 mt-1 gap-2">
                           <div className="col-span-11">
