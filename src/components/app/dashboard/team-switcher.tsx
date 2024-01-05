@@ -30,6 +30,7 @@ import {
 
 import { useSession } from "next-auth/react"
 import { switchOrganization } from "@/utils/switch-organization"
+import { useRouter } from "next/router"
 
 
 
@@ -38,6 +39,7 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 interface OrganizationSwitcherProps extends PopoverTriggerProps { }
 
 export default function OrganizationSwitcher({ className }: OrganizationSwitcherProps) {
+  const router = useRouter();
 
   const { data: sessions }: any = useSession()
   const organizations = sessions.userInfo.organizations
@@ -80,8 +82,8 @@ export default function OrganizationSwitcher({ className }: OrganizationSwitcher
                   key={organization.name}
                   onSelect={async () => {
                     setSelectedOrganization(organization)
-                    setOpen(false)
                     await switchOrganization(organization.id)
+                    router.reload()
 
                   }}
                   className="text-sm"
