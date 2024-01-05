@@ -124,8 +124,7 @@ export function CreateCertificateCollectionForm(props: any) {
         description: data.description,
         image: imageUrl,
         attributes: data.attributes,
-        creators: data.authenticator,
-        certificate: "socert"
+        creators: data.authenticator?.map(item => item.value) || [],
       };
       const templateId = certId;
       const organizationId = userInfo.currentOrg;
@@ -239,7 +238,7 @@ export function CreateCertificateCollectionForm(props: any) {
                     value="basics"
                     className=" h-[29rem] border-none p-0 outline-none"
                   >
-                    <Label className="">Upload Media</Label>
+                    <Label >Certificate Corver</Label>
                     <MediaPicker
                       onChange={async (e) => {
                         setState("uploading...");
@@ -251,7 +250,7 @@ export function CreateCertificateCollectionForm(props: any) {
                         setState("idle");
                       }}
                       compact
-                      label="Upload certificate cover"
+                      label="Upload Image"
                     />
                     <FormField
                       control={form.control}
@@ -275,7 +274,7 @@ export function CreateCertificateCollectionForm(props: any) {
                         <FormItem>
                           <FormLabel>Description</FormLabel>
                           <FormControl>
-                            <Textarea
+                            <Input
                               placeholder="Enter a Description"
                               className="resize-none"
                               {...field}
@@ -289,7 +288,7 @@ export function CreateCertificateCollectionForm(props: any) {
                     <div>
                     <Label className="mt-4">List of Authenticator</Label>
                       {authenticatorFields.map((field, index) => (<>
-                        <div className="grid grid-cols-12 gap-2">
+                        <div className="grid grid-cols-12 mt-1 gap-2">
                           <div className="col-span-11">
                             <FormField
                               control={form.control}
