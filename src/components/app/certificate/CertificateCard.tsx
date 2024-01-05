@@ -19,6 +19,9 @@ import { Button } from "@/components/ui/button"
 import React from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_IMAGE_CDN } from "@/config/env"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Typography } from "@/components/ui/typography"
+import { Link } from "lucide-react"
 
 
 interface CertificateCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -39,11 +42,11 @@ export function CertificateCard({
   return (
     <div className={cn("space-y-3", className)} {...props}>
 
-    
+
 
       <div className="overflow-hidden rounded-md border-solid	 border-2">
         <Image
-          src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
+          src={data.metadata.image}
           alt={data?.id || "error"}
           width={width}
           height={height}
@@ -55,7 +58,7 @@ export function CertificateCard({
       </div>
 
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{data?.name}</h3>
+        <h3 className="font-medium leading-none">{data.metadata.name}</h3>
         <p className="text-xs text-muted-foreground">mô tả</p>
       </div>
     </div>

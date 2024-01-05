@@ -26,18 +26,23 @@ import CertificatePageLayout from "@/components/app/certificate/layout/Layout"
 import fetchClient from "@/utils/fetch-client"
 import { isNil } from "lodash"
 import { CertificateCard } from "@/components/app/certificate/CertificateCard"
+import useShyft from "@/utils/useShyft"
+import { useSession } from "next-auth/react"
 
 
 
 
 
 const CertificatePage = () => {
+    const { data: session }: any = useSession()
+    const { userInfo } = session
     const { data, error, isLoading } = useSWR({
         method: "GET",
-        endpoint: "/certificate/template"
-    }, fetchClient);
-    const listTemplate: any = data?.data.data
-    // console.log(listTemplate)
+        endpoint: `/organization/${userInfo?.currentOrg}/certificate`,
+    }, fetchClient, { refreshInterval: 500 });
+
+    const listCertificate = data?.data?.data || []
+    console.log(listCertificate)
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -62,20 +67,23 @@ const CertificatePage = () => {
                 </div>
                 <Separator className="my-4" />
                 <div className="relative">
+                    <div className="flex space-x-4 pb-4">
+                        {(!isNil(listCertificate) && isNil(error)) && listCertificate.map((item: any) => (
+                            <CertificateCard
+                                key={item.name}
+                                data={item}
+                                className="w-[250px]"
+                                aspectRatio="square"
+                                width={150}
+                                height={150}
+                            />
+                        ))}
+                    </div>
                     {/* <ScrollArea> */}
-                        {/* <div className="flex space-x-4 pb-4">
-                            {(!isNil(listTemplate) && isNil(error)) && listTemplate.map((item: any) => (
-                                <CertificateCard
-                                    key={item.name}
-                                    data={item}
-                                    className="w-[250px]"
-                                    aspectRatio="square"
-                                    width={150}
-                                    height={150}
-                                />
-                            ))}
+                    {/* <div className="flex space-x-4 pb-4">
+                            
                         </div> */}
-                        {/* <ScrollBar orientation="horizontal" /> */}
+                    {/* <ScrollBar orientation="horizontal" /> */}
                     {/* </ScrollArea> */}
                 </div>
 
