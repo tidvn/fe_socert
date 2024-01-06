@@ -15,19 +15,19 @@ export function MainNav({
         href="/dashboard"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
-        Overview
+        Dashboard
       </Link>
       <Link
         href="/dashboard/certificate"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Certificate
+        Document
       </Link>
       <Link
         href="/dashboard/member"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        member
+        Explorer
       </Link>
       {/* <Link
         href="/examples/dashboard"

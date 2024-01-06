@@ -30,6 +30,7 @@ import useShyft from "@/utils/useShyft"
 import { useSession } from "next-auth/react"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
 import { useRouter } from "next/router"
+import { ItemSkeleton } from "@/components/app/dashboard/ItemSkeleton"
 
 
 
@@ -72,24 +73,40 @@ const CertificatePage = () => {
                 <Separator className="my-4" />
                 <div className="relative">
                     <div className="flex space-x-4 pb-4">
-                        {(!isNil(listCertificate) && isNil(error)) && listCertificate.map((item: any) => (
-                            <ContextMenu>
-                                <ContextMenuTrigger>
-                                    <CertificateCard
-                                        key={item.name}
-                                        data={item}
-                                        className="w-[250px]"
-                                        aspectRatio="square"
-                                        width={150}
-                                        height={150}
-                                    /></ContextMenuTrigger>
-                                <ContextMenuContent>
-                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.address}`) }}>View member</ContextMenuItem>
-                                    <ContextMenuItem>Update member</ContextMenuItem>
-                                </ContextMenuContent>
-                            </ContextMenu>
+                        {
+                            isLoading ? (
+                                <>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                                        {Array.from({ length: 8 }).map((_, idx) => (
+                                            <ItemSkeleton
+                                                key={idx}
+                                                className="w-[250px]"
+                                                aspectRatio="square"
+                                                width={150}
+                                                height={150} />
+                                        ))}
+                                    </div>
+                                </>
+                            ) : (!isNil(listCertificate) && isNil(error)) && listCertificate.map((item: any) => (
+                                <ContextMenu>
+                                    <ContextMenuTrigger>
+                                        <CertificateCard
+                                            key={item.name}
+                                            data={item}
+                                            className="w-[250px]"
+                                            aspectRatio="square"
+                                            width={150}
+                                            height={150}
+                                        /></ContextMenuTrigger>
+                                    <ContextMenuContent>
+                                        <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.address}`) }}>View member</ContextMenuItem>
+                                        <ContextMenuItem>Update member</ContextMenuItem>
+                                    </ContextMenuContent>
+                                </ContextMenu>
 
-                        ))}
+                            ))
+                        }
+
                     </div>
                     {/* <ScrollArea> */}
                     {/* <div className="flex space-x-4 pb-4">

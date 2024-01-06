@@ -17,15 +17,16 @@ import Link from "next/link";
 
 function convertToObjects(originalData: any) {
     const headers = originalData[0];
+    const colNumber = headers.length;
     const formattedData = originalData.slice(1).map((row: any) => {
+        if (row.length != colNumber) return;
         const rowData: any = {};
         headers.forEach((header: any, index: number) => {
             rowData[header] = row[index];
         });
         return rowData;
     });
-
-    return formattedData;
+    return formattedData.filter((item: any) => !isNil(item));
 }
 const AddmemberPage = () => {
     const router = useRouter()
@@ -35,6 +36,7 @@ const AddmemberPage = () => {
 
     const handlerUpdateMember = async () => {
         if (isNil(csv)) return;
+        const object = convertToObjects(csv.data)
         await fetchClient({
             method: 'POST',
             endpoint: `/certificate/${certificateAddress}/member`,
