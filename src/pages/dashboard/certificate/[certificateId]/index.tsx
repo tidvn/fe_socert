@@ -43,7 +43,6 @@ const CertificatePage = () => {
 
 
     const certificateData = data?.data?.data || {}
-    console.log(certificateData)
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -65,7 +64,7 @@ const CertificatePage = () => {
                                         <div className="rounded-md border-2 border-gray-200 flex items-center justify-center p-2 ">
                                             <AspectRatio className="bg-muted ">
                                                 <Image
-                                                    src={certificateData.metadata.image}
+                                                    src={certificateData?.metadata?.image}
                                                     alt="Photo by Drew Beamer"
                                                     fill
                                                     className="rounded-md object-cover"
@@ -75,19 +74,19 @@ const CertificatePage = () => {
                                     </div>
                                     <div className="col-span-4 grid grid-rows">
                                         <div>
-                                            Name : {certificateData.metadata.name}
+                                            Name : {certificateData?.metadata?.name}
                                         </div>
                                         <div>
                                             organizationId
                                         </div>
                                         <div>
-                                            status : {certificateData.status}
+                                            status : {certificateData?.status}
                                         </div>
                                         <div>
-                                            address : {certificateData.address}
+                                            address : {certificateData?.address}
                                         </div>
                                         <div>
-                                            authenticator: {certificateData.creators.map((item: any) => (
+                                            authenticator: {certificateData?.creators?.map((item: any) => (
                                                 <div>{item}</div>
                                             ))}
                                         </div>
