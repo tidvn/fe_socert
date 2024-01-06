@@ -154,29 +154,6 @@ export function CreateCertificateCollectionForm(props: any) {
       }
       const { certificateId, metadata_path } = response.data.data
       const metadata_uri = `${NEXT_PUBLIC_BACKEND_URL}${metadata_path}`
-      console.log("metadat_uri ", metadata_uri);
-
-      // const imageGeneric = createGenericFile(image, `${data.name}.png`, { contentType: "image/png" })
-      // const [image_uri] = await umi.uploader.upload([imageGeneric]);
-      // const metadata = {
-      //   name: data.name,
-      //   description: data.description,
-      //   website: data.link,
-      //   image: image_uri,
-      //   attributes: data.attributes,
-      //   seller_fee_basis_points: 100 * parseInt(data.royalty ? data.royalty : ""),
-      //   properties: {
-      //     images: [
-      //       {
-      //         type: "image/png",
-      //         uri: image_uri
-      //       },
-      //     ]
-      //   },
-      //   creators: []
-      // };
-      // const metadat_uri = await umi.uploader.uploadJson(metadata);
-
       let tx = await createNft(umi, {
         mint: signer,
         name: data.name,
@@ -185,6 +162,7 @@ export function CreateCertificateCollectionForm(props: any) {
         isCollection: true,
       })
 
+      
 
       let result = await tx.sendAndConfirm(umi);
       const signature = base58.encode(result.signature);
@@ -206,7 +184,6 @@ export function CreateCertificateCollectionForm(props: any) {
         }
         setOpen(true)
       }
-      console.log("signature ", signature);
     } catch (e: any) {
       console.log(e.message)
     } finally {
