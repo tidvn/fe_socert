@@ -85,7 +85,7 @@ const certificateFormSchema = z.object({
 type CertificateFormValues = z.infer<typeof certificateFormSchema>
 
 export function CreateCertificateCollectionForm(props: any) {
-  const { certId } = props
+  const { templateId } = props
   const wallet = useWallet();
   const umi = createUmi("https://api.devnet.solana.com")
     .use(walletAdapterIdentity(wallet))
@@ -137,7 +137,6 @@ export function CreateCertificateCollectionForm(props: any) {
         },
         creators: data.authenticator?.map(item => item.value) || [],
       };
-      const templateId = certId;
       const organizationId = userInfo.currentOrg;
 
       const response = await fetchClient({
@@ -259,7 +258,7 @@ export function CreateCertificateCollectionForm(props: any) {
               </div>
               <div className="">
                 <Image
-                  src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${certId}.png`}
+                  src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${templateId}.png`}
                   alt="collection"
                   width="0"
                   height="0"
@@ -302,7 +301,7 @@ export function CreateCertificateCollectionForm(props: any) {
                       value="basics"
                       className=" h-[29rem] border-none p-0 outline-none"
                     >
-                      <Label >Certificate Corver</Label>
+                      <Label >Certificate Logo</Label>
                       <MediaPicker
                         onChange={async (e) => {
                           setState("uploading...");
