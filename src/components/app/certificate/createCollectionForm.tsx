@@ -237,7 +237,7 @@ export function CreateCertificateCollectionForm(props: any) {
             </CardContent>
             <CardFooter className="flex justify-end gap-6">
               <Button onClick={() => setOpen(false)} variant="outline">View Cert</Button>
-              <Button onClick={() => router.push(`/dashboard/`)} >Upload Student</Button>
+              <Button onClick={() => router.push(`/dashboard/`)} >Upload Member</Button>
             </CardFooter>
           </Card>
         </AlertDialogContent>
@@ -269,7 +269,7 @@ export function CreateCertificateCollectionForm(props: any) {
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                Upon completion, your student will receive an nft that looks like this
+                Upon completion, your member will receive an nft that looks like this
               </p>
             </div>
 

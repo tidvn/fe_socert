@@ -27,7 +27,7 @@ function convertToObjects(originalData: any) {
 
     return formattedData;
 }
-const AddStudentPage = () => {
+const AddmemberPage = () => {
     const router = useRouter()
     const { certificateAddress } = router.query
 
@@ -37,7 +37,7 @@ const AddStudentPage = () => {
         if (isNil(csv)) return;
         await fetchClient({
             method: 'POST',
-            endpoint: `/certificate/${certificateAddress}/student`,
+            endpoint: `/certificate/${certificateAddress}/member`,
             body: convertToObjects(csv.data),
         })
     };
@@ -90,7 +90,7 @@ const AddStudentPage = () => {
     )
 }
 
-AddStudentPage.getLayout = function getLayout(page: ReactElement) {
+AddmemberPage.getLayout = function getLayout(page: ReactElement) {
     return (
 
         <DashboardLayout>
@@ -101,4 +101,4 @@ AddStudentPage.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default AddStudentPage
+export default AddmemberPage

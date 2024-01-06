@@ -24,10 +24,10 @@ export function MainNav({
         Certificate
       </Link>
       <Link
-        href="/dashboard/student"
+        href="/dashboard/member"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Student
+        member
       </Link>
       {/* <Link
         href="/examples/dashboard"

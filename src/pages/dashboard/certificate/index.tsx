@@ -84,8 +84,8 @@ const CertificatePage = () => {
                                         height={150}
                                     /></ContextMenuTrigger>
                                 <ContextMenuContent>
-                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.address}`) }}>View Student</ContextMenuItem>
-                                    <ContextMenuItem>Update Student</ContextMenuItem>
+                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.address}`) }}>View member</ContextMenuItem>
+                                    <ContextMenuItem>Update member</ContextMenuItem>
                                 </ContextMenuContent>
                             </ContextMenu>
 
