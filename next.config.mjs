@@ -2,15 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-        port: '',
-        pathname: '**',
-      },
-    ],
-    domains: ['localhost'],
-}
+    domains: ['socert.imgix.net', 'res.cloudinary.com'],
+  },
 }
 export default nextConfig

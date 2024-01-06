@@ -64,7 +64,9 @@ export function CertificateTemplate({
                         )}
                       /></div>
                   </div>
-                  <div className="col-span-2">col2</div>
+                  <div className="col-span-2">
+                  <a>This is a template for a participation certificate. You can customize it by adding the participant’s name, the date of issue, and an authorizing signature. It is suitable for acknowledging participation in various events such as workshops, seminars, etc.</a>
+                  </div>
                 </div>
               </div>
             </CardContent>
