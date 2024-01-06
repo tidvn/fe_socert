@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import useSWR from "swr"
 import fetchClient from "@/utils/fetch-client"
+import { useRouter } from "next/router"
 
 
 
@@ -17,16 +18,24 @@ interface CertificateCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export function ListCertificateCard({
     certificateAddress,
 }: CertificateCardProps) {
-
+    const router = useRouter()
     const { data, error, isLoading } = useSWR({
         method: "GET",
         endpoint: `/certificate/${certificateAddress}/students`,
     }, fetchClient, { refreshInterval: 500 });
 
+    if (isLoading) return <div>Loading...</div>
+
+    if (!data) {
+        return (
+            <Button onClick={() => router.push(`/dashboard/certificate/${certificateAddress}/student`)} >
+                Add Member
+            </Button>
+        )
+    }
     return (
         <>
-
-            <Tabs defaultValue="grid" className="w-[400px]">
+            <Tabs defaultValue="grid" className="w-full">
                 <div className="space-between flex items-center">
                     <div className="text-2xl font-semibold tracking-tight">
                         Certificate Ownership

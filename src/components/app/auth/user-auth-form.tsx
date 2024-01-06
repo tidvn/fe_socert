@@ -62,24 +62,26 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </div>
 
             </div>
+            <ConnectWallet />
             {
                 wallet.connected
-                    ? (<button
+                && (<button
+                    type="button"
+                    className={cn(buttonVariants())}
+                    onClick={handleLogin}
+                >
+                    Sign To Login
+                </button>)
+            }
+
+
+            {/* <button
                         type="button"
                         className={cn(buttonVariants())}
                         onClick={handleLogin}
                     >
                         Sign To Login
-                    </button>)
-                    : (<ConnectWallet />)}
-            {/* <ConnectWallet /> */}
-            {/* <button
-                type="button"
-                className={cn(buttonVariants())}
-                onClick={handleLogin}
-            >
-                Solana
-            </button> */}
+                    </button> */}
         </div>
     )
 }
