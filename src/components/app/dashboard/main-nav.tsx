@@ -24,7 +24,7 @@ export function MainNav({
         Document
       </Link>
       <Link
-        href="/dashboard/member"
+        href="/explorer"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Explorer

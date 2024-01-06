@@ -64,7 +64,7 @@ export function CertificateTemplate({
                         )}
                       /></div>
                   </div>
-                  <div className="col-span-2">col2</div>
+                  <div className="col-span-2"></div>
                 </div>
               </div>
             </CardContent>

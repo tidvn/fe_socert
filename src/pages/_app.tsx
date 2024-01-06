@@ -5,7 +5,7 @@ import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Wallet } from "@/context/connectWalletContext"
-
+import '../styles/loading.css'
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/utils/fonts"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
-              <div className="container flex-1 ">
+              <div className=" flex-1 ">
                 <SessionProvider session={session}>
                   {getLayout(
                     <>

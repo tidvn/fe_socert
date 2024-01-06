@@ -72,9 +72,7 @@ const CertificatePage = () => {
                     <h2 className="text-2xl font-semibold tracking-tight">
                         Public Template
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                        Demo Template
-                    </p>
+                    
                 </div>
                 <Separator className="my-4" />
                 <div className="relative">

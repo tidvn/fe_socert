@@ -208,7 +208,7 @@ export function CreateCertificateCollectionForm(props: any) {
                     <div className="rounded-md border-2 border-dashed	border-gray-600 flex items-center justify-center ">
                     </div>
                   </div>
-                  <div className="col-span-2">col2</div>
+                  <div className="col-span-2"></div>
                 </div>
               </div>
             </CardContent>

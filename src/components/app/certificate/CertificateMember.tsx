@@ -57,7 +57,6 @@ export function CertificateMemberCard({
 
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{data?.metadata?.name}</h3>
-        <p className="text-xs text-muted-foreground">mô tả</p>
       </div>
     </div>
   )
