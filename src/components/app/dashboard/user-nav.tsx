@@ -32,9 +32,7 @@ export function UserNav() {
   if (status != "authenticated") {
     return;
   }
-  if (!wallet.publicKey) {
-    return;
-  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
