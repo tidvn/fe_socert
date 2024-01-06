@@ -62,12 +62,7 @@ export function ListCertificateCard({
                 </TabsContent>
                 <TabsContent value="table">
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Password</CardTitle>
-                            <CardDescription>
-                                Change your password here. After saving, you'll be logged out.
-                            </CardDescription>
-                        </CardHeader>
+                        
                         <CardContent className="space-y-2">
                             <div className="space-y-1">
                                 <Label htmlFor="current">Current password</Label>
