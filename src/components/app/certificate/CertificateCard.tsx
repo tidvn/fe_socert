@@ -55,8 +55,11 @@ export function CertificateCard({
       </div>
 
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{data?.metadata?.name}</h3>
-        <p className="text-xs text-muted-foreground">mô tả</p>
+      <h2 className="text-2xl font-medium leading-none">{data?.metadata?.name}</h2>
+      <br></br>
+        <p className="text-xs text-muted-foreground">
+        Student Certificate: A credential recognizing the successful completion of a course or series of courses, aimed at equipping students with specific knowledge or skills
+        </p>
       </div>
     </div>
   )

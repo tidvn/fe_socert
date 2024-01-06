@@ -41,60 +41,62 @@ export function CertificateTemplate({
   const [open, setOpen] = React.useState(false)
   return (
     <div className={cn("space-y-3", className)} {...props}>
-
-      <AlertDialog open={open}>
-        <AlertDialogContent>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>{data?.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-7 gap-x-8 items-center">
-                  <div className="col-span-5">
-                    <div className="rounded-md border-2 border-dashed	border-gray-600 flex items-center justify-center ">
-                      <Image
-                        src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
-                        alt="collection"
-                        width="0"
-                        height="0"
-                        sizes="100vw"
-                        className={cn(
-                          `max-h-[400px] w-auto object-cover transition-all p-1`
-                        )}
-                      /></div>
-                  </div>
-                  <div className="col-span-2">
-                  <a>This is a template for a participation certificate. You can customize it by adding the participant’s name, the date of issue, and an authorizing signature. It is suitable for acknowledging participation in various events such as workshops, seminars, etc.</a>
-                  </div>
+  <AlertDialog open={open}>
+    <AlertDialogContent>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>{data?.name}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex flex-col md:flex-row items-start gap-8">
+              <div className="flex-grow">
+                <div className="rounded-md border-2 border-dashed border-gray-600 flex items-center justify-center">
+                  <Image
+                    src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
+                    alt="collection"
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className={cn(
+                      `max-h-[2000px] w-auto object-cover transition-all p-1`
+                    )}
+                  />
                 </div>
               </div>
-            </CardContent>
-            <CardFooter className="flex justify-end gap-6">
-              <Button onClick={() => setOpen(false)} variant="outline">Cancel</Button>
-              <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)} >Use This</Button>
-            </CardFooter>
-          </Card>
-        </AlertDialogContent>
-      </AlertDialog>
+              <div className="flex-grow">
+                <a>This is a template for a participation certificate. You can customize it by adding the participant’s name, the date of issue, and an authorizing signature. It is suitable for acknowledging participation in various events such as workshops, seminars, etc.</a>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-end gap-6">
+          <Button onClick={() => setOpen(false)} variant="outline">Cancel</Button>
+          <Button onClick={() => router.push(`/dashboard/certificate/create-new/${data.id}`)}>Use This</Button>
+        </CardFooter>
+      </Card>
+    </AlertDialogContent>
+  </AlertDialog>
+
+  <div className="overflow-hidden rounded-md border-solid border-2" onClick={() => setOpen(true)}>
+    <Image
+      src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
+      alt={data?.id || "error"}
+      width={width}
+      height={height}
+      className={cn(
+        "h-auto w-auto object-cover transition-all hover:scale-105",
+        aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
+      )}
+    />
+  </div>
+
+  <div className="space-y-1 text-sm">
+    <h3 className="font-medium leading-none">{data?.name}</h3>
+  </div>
+</div>
 
 
-      <div className="overflow-hidden rounded-md border-solid	 border-2" onClick={() => setOpen(true)}>
-        <Image
-          src={`${NEXT_PUBLIC_IMAGE_CDN}/image/template/${data.id}.png`}
-          alt={data?.id || "error"}
-          width={width}
-          height={height}
-          className={cn(
-            "h-auto w-auto object-cover  transition-all hover:scale-105",
-            aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-          )}
-        />
-      </div>
-
-      <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{data?.name}</h3>
-      </div>
-    </div>
+  
   )
 }

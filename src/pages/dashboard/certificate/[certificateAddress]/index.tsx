@@ -34,7 +34,7 @@ import { ListCertificateCard } from "@/components/app/certificate/ListCertificat
 import { ItemSkeleton } from "@/components/app/dashboard/ItemSkeleton"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
 import { MintButton } from "@/components/app/certificate/MintButton"
-
+import {clsx} from 'clsx';
 const CertificatePage = () => {
     const router = useRouter()
     const { certificateAddress } = router.query
@@ -50,102 +50,98 @@ const CertificatePage = () => {
         endpoint: `/certificate/${certificateAddress}/member`,
     }, fetchClient, { refreshInterval: 500 });
 
+   
+
 
     const certificateData = data?.data?.data || {}
+
+    const [copied, setCopied] = useState(false);
+
+const handleCopy = async () => {
+  await navigator.clipboard.writeText(certificateData?.address);
+  setCopied(true);
+  setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+}
+
     return (
         <>
-            <div className="h-full px-4 py-6 lg:px-8">
-                {/* <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            Certificate Detail
-                        </h2>
-
-                    </div> */}
-
-                <div className="hidden flex-col md:flex">
-                    <div className="flex h-16 items-center px-4">
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            Certificate Detail
-                        </h2>
-                        {
-                            certificateData.status != "PUBLISHED" &&
-                            (<div className="ml-auto flex items-center space-x-4">
-                                <MintButton certMemberList={certMember?.data.data} creatorWallet={certificateData?.creators} />
-
-                            </div>)
-                        }
-
-                    </div>
+       <div className="h-full px-4 py-6 lg:px-8">
+  <div className="hidden flex-col md:flex">
+    <div className="flex h-16 items-center px-4">
+      <h2 className="text-2xl font-semibold tracking-tight">
+        Certificate Detail
+      </h2>
+      {certificateData.status != "PUBLISHED" && (
+        <div className="ml-auto flex items-center space-x-4">
+          <MintButton certMemberList={certMember?.data.data} creatorWallet={certificateData?.creators} />
+        </div>
+      )}
+    </div>
+  </div>
+  <div className="relative">
+    <div className="flex space-x-4 pb-4">
+      <Card className="w-full">
+        <CardContent>
+          {isLoading ? (
+            <>
+              <ItemSkeleton
+                className="w-[250px]  mt-5"
+                aspectRatio="square"
+                width={250}
+                height={250} />
+            </>
+          ) : (
+            <div className="grid grid-cols-6 gap-4 mt-5">
+              <div className="col-span-2 ">
+                <div className="rounded-md border-2 border-gray-200 flex items-center justify-center p-2 ">
+                  <AspectRatio className="bg-muted ">
+                    <Image
+                      src={certificateData?.metadata?.image}
+                      alt="..."
+                      fill
+                      className="rounded-md object-cover"
+                    />
+                  </AspectRatio>
                 </div>
-                <div className="relative">
-                    <div className="flex space-x-4 pb-4">
-
-                        <Card className="w-full">
-                            <CardContent>
-                                {isLoading ? (
-                                    <>
-                                        <ItemSkeleton
-                                            className="w-[250px]  mt-5"
-                                            aspectRatio="square"
-                                            width={250}
-                                            height={250} />
-
-                                    </>
-                                ) : (
-                                    <div className="grid grid-cols-6 gap-4 mt-5">
-                                        <div className="col-span-2 ">
-
-                                            <div className="rounded-md border-2 border-gray-200 flex items-center justify-center p-2 ">
-
-                                                <AspectRatio className="bg-muted ">
-
-                                                    <Image
-                                                        src={certificateData?.metadata?.image}
-                                                        alt="..."
-                                                        fill
-                                                        className="rounded-md object-cover"
-                                                    />
-
-
-                                                </AspectRatio>
-                                            </div>
-                                        </div>
-                                        <div className="col-span-4 grid grid-rows">
-                                            <div>
-                                                Name : {certificateData?.metadata?.name}
-                                            </div>
-                                            {/* <div>
-                                                organization : {certificateData?.metadata?.organization} :
-                                            </div> */}
-                                            <div>
-                                                status : {certificateData?.status}
-                                            </div>
-                                            <div>
-                                                address : {certificateData?.address}
-                                            </div>
-                                            <div>
-                                                authenticator: {certificateData?.creators?.map((item: any) => (
-                                                    <div>{item}</div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </div>
+              </div>
+              <div className="col-span-4 grid grid-rows">
+                <div>
+                    <strong>
+                 {certificateData?.metadata?.name}
+                 </strong>
                 </div>
-                {/* <Separator className="my-4" /> */}
-                <div className="relative">
-                    <div className="flex space-x-4 pb-4">
-                        <ListCertificateCard memberList={certMember?.data.data} isLoading={certMember_IsLoading} certificateAddress={certificateAddress as string} />
-                    </div>
+                <div>
+  <strong>Status: </strong> <span className={clsx({
+    'text-blue-500': certificateData?.status.toLowerCase() === 'created',
+    'text-orange-500': certificateData?.status.toLowerCase() === 'draft',
+    'text-green-500': certificateData?.status.toLowerCase() === 'published',
+  })}> {certificateData?.status}</span>
+</div>
 
+<div>
+  <strong>Address:</strong> <button onClick={handleCopy} className="font-mono">
+    {certificateData?.address} {copied && <span>(Copied!)</span>}
+  </button>
+</div>
+                <div>
+                  <strong>Authenticator: </strong> 
+                  <button onClick={handleCopy} className="font-mono">
+                   {certificateData?.creators?.map((item: any) => (<div>{item}</div>))}
+                  </button>
                 </div>
-
+              </div>
             </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+  <div className="relative">
+    <div className="flex space-x-4 pb-4">
+      <ListCertificateCard memberList={certMember?.data.data} isLoading={certMember_IsLoading} certificateAddress={certificateAddress as string} />
+    </div>
+  </div>
+</div>
 
         </>
     )

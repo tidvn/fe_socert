@@ -55,7 +55,7 @@
     "axios": "^1.6.3",
     "bs58": "^5.0.0",
     "class-variance-authority": "latest",
-    "clsx": "latest",
+    "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
     "date-fns": "^3.0.6",
     "degen": "^0.0.161",
