@@ -30,15 +30,16 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { Card, CardContent } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { ListCertificateCard } from "@/components/app/certificate/ListCertificateCard"
 
 const CertificatePage = () => {
     const router = useRouter()
-    const { certificateId } = router.query
+    const { certificateAddress } = router.query
     const { data: session }: any = useSession()
     const { userInfo } = session
     const { data, error, isLoading } = useSWR({
         method: "GET",
-        endpoint: `/certificate/id/${certificateId}`,
+        endpoint: `/certificate/${certificateAddress}`,
     }, fetchClient, { refreshInterval: 500 });
 
 
@@ -100,16 +101,10 @@ const CertificatePage = () => {
                 {/* <Separator className="my-4" /> */}
                 <div className="relative">
                     <div className="flex space-x-4 pb-4">
-                        {/* {(!isNil(publicCertificates) && isNil(error)) && publicCertificates.map((item: any) => (
-                            <CertificateTemplate
-                                key={item.name}
-                                data={item}
-                                className="w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
-                            />
-                        ))} */}
+
+
+                        <ListCertificateCard certificateAddress={certificateAddress as string} />
+
                     </div>
 
                 </div>

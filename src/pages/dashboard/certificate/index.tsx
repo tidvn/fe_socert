@@ -46,7 +46,7 @@ const CertificatePage = () => {
     }, fetchClient, { refreshInterval: 500 });
 
     const listCertificate = data?.data?.data || []
-    console.log(listCertificate)
+    // console.log(listCertificate)
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
@@ -84,7 +84,7 @@ const CertificatePage = () => {
                                         height={150}
                                     /></ContextMenuTrigger>
                                 <ContextMenuContent>
-                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.id}`) }}>View Student</ContextMenuItem>
+                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.address}`) }}>View Student</ContextMenuItem>
                                     <ContextMenuItem>Update Student</ContextMenuItem>
                                 </ContextMenuContent>
                             </ContextMenu>

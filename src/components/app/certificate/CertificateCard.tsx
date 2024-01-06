@@ -41,12 +41,9 @@ export function CertificateCard({
 }: CertificateCardProps) {
   return (
     <div className={cn("space-y-3", className)} {...props}>
-
-
-
       <div className="overflow-hidden rounded-md border-solid	 border-2">
         <Image
-          src={data.metadata.image}
+          src={data?.metadata?.image}
           alt={data?.id || "error"}
           width={width}
           height={height}
@@ -58,7 +55,7 @@ export function CertificateCard({
       </div>
 
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{data.metadata.name}</h3>
+        <h3 className="font-medium leading-none">{data?.metadata?.name}</h3>
         <p className="text-xs text-muted-foreground">mô tả</p>
       </div>
     </div>

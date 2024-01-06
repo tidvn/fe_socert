@@ -60,7 +60,7 @@ export function CertificateTemplate({
                         height="0"
                         sizes="100vw"
                         className={cn(
-                          `max-h-[800px] w-auto object-cover transition-all p-1`
+                          `max-h-[400px] w-auto object-cover transition-all p-1`
                         )}
                       /></div>
                   </div>
