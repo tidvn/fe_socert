@@ -9,18 +9,17 @@ import { ConnectWallet } from "../wallet/WalletButton"
 import { buttonVariants } from "@/components/ui/button";
 import fetchClient from "@/utils/fetch-client";
 import * as bs58 from "bs58";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { isNil } from "lodash";
+import { Router } from "lucide-react";
+import { useRouter } from "next/router";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-
-
+    const router = useRouter();
     const wallet = useWallet();
 
-    // React.useEffect(() => {
-    //     handleLogin()
-    // }, [wallet.connected]);
+
 
     async function handleLogin() {
         try {
@@ -52,6 +51,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             console.log(error)
         }
     }
+   
 
     return (
 

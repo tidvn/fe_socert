@@ -42,7 +42,7 @@ export function TableView({
               {columns.map((column, colIndex) => (
                 <TableCell key={colIndex}>{row[column]}</TableCell>
               ))}
-              <DataTableRowActions row={row} />
+              {/* <DataTableRowActions row={row} /> */}
             </TableRow>
           );
         })}

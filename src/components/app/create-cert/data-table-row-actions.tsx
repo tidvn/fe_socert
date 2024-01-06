@@ -17,9 +17,8 @@ interface TableRowActionsProps {
 }
 
 export function DataTableRowActions({
-  row,
+  row
 }: TableRowActionsProps) {
-  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
