@@ -3,14 +3,15 @@ import DashboardLayout from "@/components/layout/dashboard/dashboard"
 import { ReactElement } from "react"
 import { useRouter } from 'next/router'
 import { CreateCertificateCollectionForm } from "@/components/app/certificate/createCollectionForm"
+import { template } from "lodash"
 
 const CreateCertificatePage = () => {
 
     const router = useRouter()
-    const { id } = router.query
+    const { templateId } = router.query
     return (
         <>
-            <CreateCertificateCollectionForm certId={id}  />
+            <CreateCertificateCollectionForm templateId={templateId}  />
         </>
     )
 }

@@ -28,12 +28,16 @@ import { isNil } from "lodash"
 import { CertificateCard } from "@/components/app/certificate/CertificateCard"
 import useShyft from "@/utils/useShyft"
 import { useSession } from "next-auth/react"
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
+import { useRouter } from "next/router"
 
 
 
 
 
 const CertificatePage = () => {
+    const router = useRouter()
+
     const { data: session }: any = useSession()
     const { userInfo } = session
     const { data, error, isLoading } = useSWR({
@@ -69,14 +73,22 @@ const CertificatePage = () => {
                 <div className="relative">
                     <div className="flex space-x-4 pb-4">
                         {(!isNil(listCertificate) && isNil(error)) && listCertificate.map((item: any) => (
-                            <CertificateCard
-                                key={item.name}
-                                data={item}
-                                className="w-[250px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
-                            />
+                            <ContextMenu>
+                                <ContextMenuTrigger>
+                                    <CertificateCard
+                                        key={item.name}
+                                        data={item}
+                                        className="w-[250px]"
+                                        aspectRatio="square"
+                                        width={150}
+                                        height={150}
+                                    /></ContextMenuTrigger>
+                                <ContextMenuContent>
+                                    <ContextMenuItem onClick={() => { router.push(`/dashboard/certificate/${item.id}`) }}>View Student</ContextMenuItem>
+                                    <ContextMenuItem>Update Student</ContextMenuItem>
+                                </ContextMenuContent>
+                            </ContextMenu>
+
                         ))}
                     </div>
                     {/* <ScrollArea> */}
