@@ -12,10 +12,9 @@ export default function IndexPage() {
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-          "Discover a World of Opportunities with SO-CERT"          </h1>
+          &#34;Discover a World of Opportunities with SO-CERT&#34;          </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-          SO-CERT" is a website that utilizes Solana blockchain to provide a transparent and easily verifiable certificate solution. In the context of counterfeit degrees and fake certifications flooding the market, "SO-CERT" promises to deliver an efficient and trustworthy solution.
-          </p>
+          SO-CERT&#34; is a website that utilizes Solana blockchain to provide a transparent and easily verifiable certificate solution. In the context of counterfeit degrees and fake certifications flooding the market, &#34;SO-CERT&#34; promises to deliver an efficient and trustworthy solution.          </p>
           <div className="space-x-4">
             <Link href="/auth/login" className={cn(buttonVariants({ size: "lg" }))}>
               Get Started
