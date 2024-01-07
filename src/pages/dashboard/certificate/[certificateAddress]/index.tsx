@@ -55,14 +55,6 @@ const CertificatePage = () => {
     return (
         <>
             <div className="h-full px-4 py-6 lg:px-8">
-                {/* <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            Certificate Detail
-                        </h2>
-
-                    </div> */}
-
                 <div className="hidden flex-col md:flex">
                     <div className="flex h-16 items-center px-4">
                         <h2 className="text-2xl font-semibold tracking-tight">

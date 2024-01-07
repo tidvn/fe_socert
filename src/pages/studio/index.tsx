@@ -28,20 +28,52 @@ import { userStore } from "@/store/user"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Loading from "@/components/loading"
+import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 
 export const metadata: Metadata = {
   title: "Studio",
 }
 
 const StudioPage = () => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  // if (loading) {
+  if (loading) {
 
-  //   return <Loading />
-  // }
-  
-  return (<StudioLayout><iframe src="https://flatdraw.com/" frameBorder="0" width="100%" height="800px" allowFullScreen></iframe></StudioLayout>
+    return <Loading />
+  }
+
+  return (<StudioLayout>
+    
+    <iframe src="https://flatdraw.com/" frameBorder="0" width="100%" height="800px" allowFullScreen></iframe>
+    <div className="flex h-16 items-center"> 
+
+     <Dialog>
+      <DialogTrigger asChild>
+      <Button>save</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Name of this template</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+          </div>
+
+        </div>
+        <DialogFooter>
+          <Button  onClick={()=>setLoading(true)}>Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>       
+        
+      </div>
+  </StudioLayout>
 
   )
 

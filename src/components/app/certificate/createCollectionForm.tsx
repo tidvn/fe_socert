@@ -154,36 +154,38 @@ export function CreateCertificateCollectionForm(props: any) {
       }
       const { certificateId, metadata_path } = response.data.data
       const metadata_uri = `${NEXT_PUBLIC_BACKEND_URL}${metadata_path}`
-      let tx = await createNft(umi, {
-        mint: signer,
-        name: data.name,
-        uri: metadata_uri,
-        sellerFeeBasisPoints: percentAmount(0),
-        isCollection: true,
-      })
+      setOpen(true)
+      // setState("Create Transaction...")
+      // let tx = await createNft(umi, {
+      //   mint: signer,
+      //   name: data.name,
+      //   uri: metadata_uri,
+      //   sellerFeeBasisPoints: percentAmount(0),
+      //   isCollection: true,
+      // })
 
-      
 
-      let result = await tx.sendAndConfirm(umi);
-      const signature = base58.encode(result.signature);
-      if (signature) {
-        // toast.success("Create collection success")
 
-        const response = await fetchShyft({
-          method: "GET",
-          endpoint: `/sol/v1/wallet/transaction?network=devnet&txn_signature=${signature}`,
-        })
-        if (response) {
-          await fetchClient({
-            method: "POST",
-            endpoint: `/certificate/collection/${certificateId}`,
-            body: {
-              nftAddress: response.data.result?.parsed.actions[0].info.nft_address
-            }
-          })
-        }
-        setOpen(true)
-      }
+      // let result = await tx.sendAndConfirm(umi);
+      // const signature = base58.encode(result.signature);
+      // if (signature) {
+      //   // toast.success("Create collection success")
+
+      //   const response = await fetchShyft({
+      //     method: "GET",
+      //     endpoint: `/sol/v1/wallet/transaction?network=devnet&txn_signature=${signature}`,
+      //   })
+      //   if (response) {
+      //     await fetchClient({
+      //       method: "POST",
+      //       endpoint: `/certificate/collection/${certificateId}`,
+      //       body: {
+      //         nftAddress: response.data.result?.parsed.actions[0].info.nft_address
+      //       }
+      //     })
+      //   }
+      //   setOpen(true)
+      // }
     } catch (e: any) {
       console.log(e.message)
     } finally {
@@ -203,18 +205,13 @@ export function CreateCertificateCollectionForm(props: any) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="grid grid-cols-7 gap-x-8 items-center">
-                  <div className="col-span-5">
-                    <div className="rounded-md border-2 border-dashed	border-gray-600 flex items-center justify-center ">
-                    </div>
-                  </div>
-                  <div className="col-span-2"></div>
-                </div>
+                <h1> Create Success </h1>
+
               </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-6">
-              <Button onClick={() => setOpen(false)} variant="outline">View Cert</Button>
-              <Button onClick={() => router.push(`/dashboard/`)} >Upload Member</Button>
+              <Button onClick={() => router.push(`/dashboard/certificate/`)} variant="outline">View Cert</Button>
+              <Button onClick={() => router.push(`/dashboard/certificate/`)} >Upload Member</Button>
             </CardFooter>
           </Card>
         </AlertDialogContent>
