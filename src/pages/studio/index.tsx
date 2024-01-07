@@ -38,7 +38,11 @@ export const metadata: Metadata = {
 
 const StudioPage = () => {
   const [loading, setLoading] = useState(false)
+  const [data, setData] = useState()
 
+  const handleChanges = (e: any) => {
+      setData(e.target.value)
+  }
   if (loading) {
 
     return <Loading />
@@ -62,7 +66,7 @@ const StudioPage = () => {
             <Label htmlFor="name" className="text-right">
               Name
             </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+            <Input id="name" onChange={handleChanges} className="col-span-3" />
           </div>
 
         </div>
